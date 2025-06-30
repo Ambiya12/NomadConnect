@@ -1,0 +1,109 @@
+.header {
+    background-color: #d6d3d1;
+    padding: 1rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+  }
+  
+  .headerContainer {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: #292524;
+  }
+  
+  .logoIcon {
+    width: 2rem;
+    height: 2rem;
+    color: #292524;
+  }
+  
+  .logoText {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .logoTitle {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #292524;
+  }
+  
+  .nav {
+    display: none;
+    align-items: center;
+    gap: 2rem;
+  }
+  
+  .navLink {
+    color: #292524;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .navLink:hover {
+    color: #f97316;
+  }
+  
+  .navLinkActive {
+    color: #f97316;
+    font-weight: 600;
+  }
+  
+  .loginButton {
+    background-color: #a8a29e;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .loginButton:hover {
+    background-color: #78716c;
+  }Ò
+  
+  .mobileLoginButton {
+    background-color: #a8a29e;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .mobileLoginButton:hover {
+    background-color: #78716c;
+  }
+  
+  @media (min-width: 768px) {
+    .nav {
+      display: flex;
+    }
+    
+    .mobileNav {
+      display: none;
+    }
+    
+    .mobileLoginButton {
+      display: none;
+    }
+  }
+  
+  @media (max-width: 767px) {
+    .loginButton {
+      display: none;
+    }
+  }
