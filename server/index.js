@@ -7,6 +7,7 @@ import connectDB from './database/client.js';
 import authRouter from './routes/auth.js';
 import destinationRouter from './routes/destination.js';
 import geocodeRouter from './routes/geocode.js';
+import userRouter from './routes/user.js';
 
 const PORT = process.env.PORT || 8000;
 
@@ -17,7 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/images', express.static(path.resolve('public/images')));
 
-app.use('/api', authRouter, destinationRouter, geocodeRouter); 
+app.use('/api', authRouter, userRouter, destinationRouter, geocodeRouter); 
 
 app.get ('/public/images/:filename', (req, res) => {
   const file = `public/images/${req.params.filename}`;
