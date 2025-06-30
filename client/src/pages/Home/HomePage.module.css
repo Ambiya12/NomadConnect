@@ -1,0 +1,172 @@
+
+.heroContainer {
+  max-width: 1400px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.heroImage {
+  width: 100%;
+  margin: 0 auto;
+  display: block;
+  margin-top: 1rem;
+}
+
+.heroTitle {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.storiesContainer {
+  max-width: 1400px;
+  margin: 0 auto;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+.storiesGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+.storyCard {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.storyCard:hover {
+  transform: translateY(-2px);
+}
+
+.storyImageContainer {
+  margin-bottom: 1rem;
+  overflow: hidden;
+  border-radius: 0.5rem;
+}
+
+.storyImage {
+  width: 100%;
+  height: 12rem;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.storyCard:hover .storyImage {
+  transform: scale(1.05);
+}
+
+.storyTitle {
+  font-weight: 600;
+  font-size: 1.125rem;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.storyCard:hover .storyTitle {
+  color: #f97316;
+}
+
+.storyDescription {
+  color: #6b7280;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.joinContainer {
+  display: flex;
+  max-width: 64rem;
+  margin: 0 auto;
+  text-align: center;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  column-gap: 1.5rem;
+  justify-content: center;
+}
+
+.joinTitle {
+  font-size: 1.875rem;
+  font-weight: bold;
+  color: #1f2937;
+}
+
+.joinButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.joinButton {
+  background-color: #fbbf24;
+  color: black;
+  padding: 0.5rem 2rem;
+  border-radius: 9999px;
+  font-weight: 400;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+}
+
+.joinButton:hover {
+  background-color: #f59e0b;
+}
+
+.exploreButton {
+  border: 2px solid #d1d5db;
+  color: #374151;
+  padding: 0.5rem 2rem;
+  border-radius: 9999px;
+  font-weight: 400;
+  transition: border-color 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  cursor: pointer;
+}
+
+.exploreButton:hover {
+  border-color: #9ca3af;
+}
+
+.buttonIcon {
+  margin-left: 0.5rem;
+  width: 1rem;
+  height: 1rem;
+}
+
+@media (min-width: 640px) {
+  .joinButtons {
+    flex-direction: row;
+  }
+}
+
+@media (min-width: 768px) {
+  .heroTitle {
+    font-size: 3rem;
+  }
+  
+  .storiesGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .statsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .storiesGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
