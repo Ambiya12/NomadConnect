@@ -6,6 +6,8 @@ import SignUpPage from './pages/SignUp/SignUpPage';
 import DestinationPage from './pages/Destination/DestinationPage';
 import DestinationDetailPage from './pages/Destination/DestinationDetail/DestinationDetailPage';
 import CreateDestinationPage from './pages/Destination/createDestination/CreateDestination';
+import TravelTipsPage from './pages/TravelTips/TravelTipsPage';
+import AboutUsPage from './pages/AboutUs/AboutUsPage';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
           <Route path="/destinations" element={<DestinationPage />} />
           <Route path="/destination/:id" element={<DestinationDetailPage />} />
           <Route path="/create-destination" element={<CreateDestinationPage/>} />
+          <Route path="/travel-tips" element={<TravelTipsPage />} />
+          <Route path="/about" element={<AboutUsPage />} />
         </Routes>
       </Layout>
     </Router>
