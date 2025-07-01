@@ -1,0 +1,165 @@
+.destinationCard {
+  background: white;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.destinationCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
+}
+
+.imageContainer {
+  position: relative;
+  overflow: hidden;
+  height: 16rem;
+}
+
+.destinationImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.destinationCard:hover .destinationImage {
+  transform: scale(1.05);
+}
+
+.imageOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  transition: background 0.3s ease;
+}
+
+.destinationCard:hover .imageOverlay {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.destinationName {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+  color: white;
+}
+
+.destinationName h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.cardContent {
+  padding: 1.5rem;
+}
+
+.locationInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.locationIcon {
+  width: 1rem;
+  height: 1rem;
+  color: #f97316;
+}
+
+.locationText {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.authorInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.authorIcon {
+  width: 1rem;
+  height: 1rem;
+  color: #9ca3af;
+}
+
+.authorText {
+  color: #374151;
+  font-weight: 500;
+}
+
+.publishDate {
+  color: #9ca3af;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tag {
+  background-color: #fed7aa;
+  color: #c2410c;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+}
+
+.description {
+  color: #6b7280;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.cardActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stats {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: #9ca3af;
+}
+
+.likesCount,
+.commentsCount {
+  display: flex;
+  align-items: center;
+}
+
+.readMoreButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #f97316;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.readMoreButton:hover {
+  background-color: #ea580c;
+}
+
+.buttonIcon {
+  width: 1rem;
+  height: 1rem;
+}
