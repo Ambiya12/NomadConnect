@@ -4,6 +4,7 @@ import { Public, CloudUpload } from '@mui/icons-material';
 import { useAuth } from '../../Login/hooks/AuthContext';
 import { getCoordinatesForLocation } from '../service/geocodeService';
 import { CountryDropdown } from 'react-country-region-selector';
+import { createDestination } from '../service/createDestinationService';
 import styles from './CreateDestination.module.css';
 
 const CreateDestinationPage: React.FC = () => {
@@ -79,24 +80,8 @@ const CreateDestinationPage: React.FC = () => {
         submitData.append("images", photo);
       });
   
-      const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("Authentication token not found. Please log in again.");
-      }
+      const result = await createDestination(submitData);
   
-      const response = await fetch("http://localhost:8000/api/destinations", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: submitData,
-      });
-  
-      const result = await response.json();
-  
-      if (!response.ok) {
-        throw new Error(result.message || "Failed to create destination");
-      }
       console.log("Destination created successfully:", result);
   
       navigate("/destinations", {
