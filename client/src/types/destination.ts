@@ -30,3 +30,14 @@ export interface Destination {
   likes: string[];
   comments: Comment[];
 }
+
+export interface CreateDestinationPayload {
+  name: string;
+  description: string;
+  country: string;
+  city: string;
+  address: string;
+  location: Location;
+  tags: string[];
+  images: File[];
+}
