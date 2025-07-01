@@ -1,0 +1,35 @@
+.mapCard {
+  background: #f9fafb;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  border: 1px solid #e5e7eb;
+}
+
+.mapTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.mapPlaceholder {
+  text-align: center;
+  padding: 2rem;
+  background: white;
+  border-radius: 0.5rem;
+  border: 2px dashed #d1d5db;
+}
+
+.mapIcon {
+  width: 2rem;
+  height: 2rem;
+  color: #f97316;
+  margin: 0 auto 0.5rem;
+}
+
+.coordinates {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin-top: 0.5rem;
+  font-family: monospace;
+}

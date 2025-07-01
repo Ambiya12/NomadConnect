@@ -1,0 +1,142 @@
+.container {
+  min-height: 100vh;
+  background: white;
+}
+
+.headerSection {
+  background: linear-gradient(to bottom, #dbeafe, white);
+  padding: 4rem 1rem;
+}
+
+.headerContainer {
+  max-width: 64rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 2rem;
+}
+
+.addDestinationContainer {
+  margin-top: 1.5rem;
+}
+
+.addDestinationButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #fbbf24;
+  color: #1f2937;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+
+.addDestinationButton:hover {
+  background-color: #f59e0b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
+}
+
+.destinationsSection {
+  padding: 4rem 1rem;
+}
+
+.destinationsContainer {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.destinationsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+.contributeSection {
+  padding: 4rem 1rem;
+  background: #f9fafb;
+}
+
+.contributeContainer {
+  max-width: 64rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.contributeTitle {
+  font-size: 1.875rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.contributeDescription {
+  color: #6b7280;
+  font-size: 1.125rem;
+  margin-bottom: 2rem;
+  max-width: 32rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.contributeButton {
+  background-color: #f97316;
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+}
+
+.contributeButton:hover {
+  background-color: #ea580c;
+}
+
+.buttonIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+@media (min-width: 768px) {
+  .title,
+  .subtitle {
+    font-size: 3rem;
+  }
+
+  .destinationsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .destinationsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .destinationsGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
