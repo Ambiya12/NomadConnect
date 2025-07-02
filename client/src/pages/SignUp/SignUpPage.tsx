@@ -1,38 +1,81 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { registerUser } from "./service/signUpService";
-import styles from "./SignUpPage.module.css";
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Visibility, VisibilityOff, CloudUpload, Person } from '@mui/icons-material';
+
+import styles from './SignUpPage.module.css';
+import { registerUser } from './service/signUpService';
 
 const SignUpPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
+  const [profilePicturePreview, setProfilePicturePreview] = useState<string | null>(null);
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    bio: '',
+    profilePicture: null as File | null
   });
   const navigate = useNavigate();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
-    if (error) setError("");
+    if (error) setError('');
+  };
+
+  const handleProfilePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        setError('Please select a valid image file');
+        return;
+      }
+      
+      if (file.size > 5 * 1024 * 1024) {
+        setError('Profile picture must be less than 5MB');
+        return;
+      }
+
+      setFormData({
+        ...formData,
+        profilePicture: file
+      });
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setProfilePicturePreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeProfilePicture = () => {
+    setFormData({
+      ...formData,
+      profilePicture: null
+    });
+    setProfilePicturePreview(null);
+    
+    const fileInput = document.getElementById('profilePicture') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError("");
+    setError('');
 
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
+      setError('Passwords do not match');
       setIsLoading(false);
       return;
     }
@@ -42,23 +85,26 @@ const SignUpPage: React.FC = () => {
         formData.firstName,
         formData.lastName,
         formData.email,
-        formData.password
+        formData.password,
+        formData.bio,
+        formData.profilePicture
       );
-
-      console.log("Registration successful:", response);
+      
+      console.log('Registration successful:', response);
 
       if (response.accessToken) {
-        localStorage.setItem("token", response.accessToken);
+        localStorage.setItem('token', response.accessToken);
       }
       if (response.refreshToken) {
-        localStorage.setItem("refreshToken", response.refreshToken);
+        localStorage.setItem('refreshToken', response.refreshToken);
       }
-      navigate("/login", {
-        state: { message: "Account created successfully! Please log in." },
+      
+      navigate('/login', { 
+        state: { message: 'Account created successfully! Please log in.' }
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      setError(err.message || "Registration failed. Please try again.");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err : any) {
+      setError(err.message || 'Registration failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -72,8 +118,7 @@ const SignUpPage: React.FC = () => {
             Start your journey with fellow explorers
           </h1>
           <p className={styles.leftDescription}>
-            Share your travel stories, discover hidden gems, and connect with a
-            community that values authentic experiences over tourist traps.
+            Share your travel stories, discover hidden gems, and connect with a community that values authentic experiences over tourist traps.
           </p>
           <ul className={styles.featureList}>
             <li className={styles.featureItem}>
@@ -95,7 +140,9 @@ const SignUpPage: React.FC = () => {
       <div className={styles.rightSide}>
         <div className={styles.formContainer}>
           <div className={styles.mobileHeader}>
-            <h1 className={styles.mobileTitle}>Join Nomad Connect</h1>
+            <h1 className={styles.mobileTitle}>
+              Join Nomad Connect
+            </h1>
             <p className={styles.mobileSubtitle}>
               Create your account and start exploring
             </p>
@@ -106,33 +153,84 @@ const SignUpPage: React.FC = () => {
             <p className={styles.desktopSubtitle}>Create your nomad account</p>
           </div>
 
-          {error && <div className={styles.errorMessage}>{error}</div>}
+          {error && (
+            <div className={styles.errorMessage}>
+              {error}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className={styles.form}>
-            <div>
-              <input
-                type="text"
-                name="firstName"
-                placeholder="First Name"
-                value={formData.firstName}
-                onChange={handleInputChange}
-                className={styles.input}
-                required
-                disabled={isLoading}
-              />
+            <div className={styles.profilePictureSection}>
+              <label className={styles.profilePictureLabel}>Profile Picture (Optional)</label>
+              <div className={styles.profilePictureContainer}>
+                {profilePicturePreview ? (
+                  <div className={styles.profilePicturePreview}>
+                    <img 
+                      src={profilePicturePreview} 
+                      alt="Profile preview" 
+                      className={styles.previewImage}
+                    />
+                    <button
+                      type="button"
+                      onClick={removeProfilePicture}
+                      className={styles.removeButton}
+                      disabled={isLoading}
+                    >
+                      ×
+                    </button>
+                  </div>
+                ) : (
+                  <div className={styles.profilePicturePlaceholder}>
+                    <Person className={styles.placeholderIcon} />
+                  </div>
+                )}
+                
+                <div className={styles.uploadButtonContainer}>
+                  <input
+                    type="file"
+                    id="profilePicture"
+                    accept="image/*"
+                    onChange={handleProfilePictureChange}
+                    className={styles.fileInput}
+                    disabled={isLoading}
+                  />
+                  <label htmlFor="profilePicture" className={styles.uploadButton}>
+                    <CloudUpload className={styles.uploadIcon} />
+                    {profilePicturePreview ? 'Change Photo' : 'Upload Photo'}
+                  </label>
+                </div>
+              </div>
+              <p className={styles.uploadHint}>
+                JPG, PNG or GIF. Max size 5MB.
+              </p>
             </div>
 
-            <div>
-              <input
-                type="text"
-                name="lastName"
-                placeholder="Last Name"
-                value={formData.lastName}
-                onChange={handleInputChange}
-                className={styles.input}
-                required
-                disabled={isLoading}
-              />
+            <div className={styles.nameRow}>
+              <div className={styles.nameField}>
+                <input
+                  type="text"
+                  name="firstName"
+                  placeholder="First Name"
+                  value={formData.firstName}
+                  onChange={handleInputChange}
+                  className={styles.input}
+                  required
+                  disabled={isLoading}
+                />
+              </div>
+
+              <div className={styles.nameField}>
+                <input
+                  type="text"
+                  name="lastName"
+                  placeholder="Last Name"
+                  value={formData.lastName}
+                  onChange={handleInputChange}
+                  className={styles.input}
+                  required
+                  disabled={isLoading}
+                />
+              </div>
             </div>
 
             <div>
@@ -148,9 +246,21 @@ const SignUpPage: React.FC = () => {
               />
             </div>
 
+            <div>
+              <textarea
+                name="bio"
+                placeholder="Tell us about yourself (optional)"
+                value={formData.bio}
+                onChange={handleInputChange}
+                className={styles.bioTextarea}
+                rows={3}
+                disabled={isLoading}
+              />
+            </div>
+
             <div className={styles.inputGroup}>
               <input
-                type={showPassword ? "text" : "password"}
+                type={showPassword ? 'text' : 'password'}
                 name="password"
                 placeholder="Password"
                 value={formData.password}
@@ -171,7 +281,7 @@ const SignUpPage: React.FC = () => {
 
             <div className={styles.inputGroup}>
               <input
-                type={showConfirmPassword ? "text" : "password"}
+                type={showConfirmPassword ? 'text' : 'password'}
                 name="confirmPassword"
                 placeholder="Confirm Password"
                 value={formData.confirmPassword}
@@ -195,14 +305,17 @@ const SignUpPage: React.FC = () => {
               className={styles.submitButton}
               disabled={isLoading}
             >
-              {isLoading ? "Creating Account..." : "Create Account"}
+              {isLoading ? 'Creating Account...' : 'Create Account'}
             </button>
           </form>
 
           <div className={styles.loginPrompt}>
             <p className={styles.loginText}>
-              Already have an account?{" "}
-              <Link to="/login" className={styles.loginLink}>
+              Already have an account?{' '}
+              <Link 
+                to="/login" 
+                className={styles.loginLink}
+              >
                 Log in
               </Link>
             </p>
