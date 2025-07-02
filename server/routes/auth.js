@@ -1,9 +1,11 @@
 import {Router} from 'express';
 import { createUser, loginUser, logoutUser, refreshToken } from '../controllers/authController.js';
+import { uploadProfileImage } from "../middlewares/uploadFile.js";
+
 
 const authRouter = Router();
 
-authRouter.post('/register', createUser)
+authRouter.post('/register', uploadProfileImage.single('profile_picture'), createUser);
 
 authRouter.post('/login', loginUser)
 

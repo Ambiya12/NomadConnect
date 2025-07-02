@@ -18,6 +18,13 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    profile_picture: {
+        type: String,
+    },
+    bio: {
+        type: String,
+        default: '', 
+    },
 });
 
 export default mongoose.model('User', userSchema);

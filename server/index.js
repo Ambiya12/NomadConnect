@@ -16,14 +16,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/images', express.static(path.resolve('public/images')));
+app.use('/images/profiles', express.static(path.resolve('public/images/profiles')));
+app.use('/images/destinations', express.static(path.resolve('public/images/destinations')));
 
 app.use('/api', authRouter, userRouter, destinationRouter, geocodeRouter); 
-
-app.get ('/public/images/:filename', (req, res) => {
-  const file = `public/images/${req.params.filename}`;
-  res.sendFile(path.resolve(file));
-});
 
 app.get('/images', (req, res) => {
   fs.readdir('public/images', (err, files) => {
