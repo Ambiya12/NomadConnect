@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
 import ProfileHeader from '../../components/Profile/ProfileHeader';
-import DestinationsGrid from '../../components/Profile/DestinationGrid';
+import DestinationsGrid from '../../components/Profile/DestinationsGrid';
 import { useProfile } from './hooks/useProfile';
 
 import styles from './ProfilePage.module.css';
@@ -62,7 +62,6 @@ const ProfilePage: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.content}>
         <ProfileHeader 
-          user={user} 
           userProfile={userProfile} 
           stats={stats} 
         />
