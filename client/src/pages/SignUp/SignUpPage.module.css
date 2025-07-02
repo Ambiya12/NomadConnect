@@ -58,6 +58,7 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  overflow-y: auto;
 }
 
 .formContainer {
@@ -113,6 +114,129 @@
   gap: 1rem;
 }
 
+.profilePictureSection {
+  margin-bottom: 1rem;
+}
+
+.profilePictureLabel {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.75rem;
+}
+
+.profilePictureContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.profilePicturePreview {
+  position: relative;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #e5e7eb;
+}
+
+.previewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.removeButton {
+  position: absolute;
+  top: -0.25rem;
+  right: -0.25rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.removeButton:hover:not(:disabled) {
+  background: #b91c1c;
+}
+
+.profilePicturePlaceholder {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background: #f3f4f6;
+  border: 2px dashed #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholderIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #9ca3af;
+}
+
+.uploadButtonContainer {
+  flex: 1;
+}
+
+.fileInput {
+  display: none;
+}
+
+.uploadButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #374151;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.uploadButton:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.uploadIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.uploadHint {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+
+.nameRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.nameField {
+  flex: 1;
+}
+
 .inputGroup {
   position: relative;
 }
@@ -133,6 +257,28 @@
 }
 
 .input:disabled {
+  background-color: #f9fafb;
+  cursor: not-allowed;
+}
+
+.bioTextarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: all 0.3s ease;
+}
+
+.bioTextarea:focus {
+  outline: none;
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+}
+
+.bioTextarea:disabled {
   background-color: #f9fafb;
   cursor: not-allowed;
 }
@@ -201,6 +347,22 @@
 
 .loginLink:hover {
   color: #ea580c;
+}
+
+@media (max-width: 640px) {
+  .nameRow {
+    grid-template-columns: 1fr;
+  }
+  
+  .profilePictureContainer {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .uploadButtonContainer {
+    flex: none;
+  }
 }
 
 @media (min-width: 1024px) {
