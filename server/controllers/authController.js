@@ -22,7 +22,10 @@ export const createUser = async (req, res) => {
         if (emailVerification) return res.status(400).json('Email already exists');
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ first_name, last_name, email, password: hashedPassword });
+
+        const profilePicturePath = req.file?.path || '';
+        
+        const newUser = new User({ first_name, last_name, email, password: hashedPassword, profile_picture: profilePicturePath });
         await newUser.save();
 
         const accessToken = generateAccessToken(newUser);
