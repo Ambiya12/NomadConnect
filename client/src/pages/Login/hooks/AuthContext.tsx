@@ -11,12 +11,15 @@ interface User {
   email: string;
   first_name: string;
   last_name: string;
+  profile_picture?: string;
+  bio?: string;
 }
 
 interface AuthContextType {
   user: User | null;
   login: (userData: User, accessToken?: string, refreshToken?: string) => void;
   logout: () => void;
+  updateUser: (userData: Partial<User>) => void;
   isAuthenticated: boolean;
   isLoading: boolean;
 }
@@ -81,8 +84,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           email: profileData.email,
           first_name: profileData.first_name,
           last_name: profileData.last_name,
+          profile_picture: profileData.profile_picture,
+          bio: profileData.bio,
         };
         localStorage.setItem("user", JSON.stringify(userData));
+        setUser(userData);
         return true;
       }
       return false;
@@ -114,6 +120,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const updateUser = (userData: Partial<User>) => {
+    if (user) {
+      const updatedUser = { ...user, ...userData };
+      setUser(updatedUser);
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+    }
+  };
+
   const logout = () => {
     setUser(null);
     clearStorage();
@@ -127,6 +141,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         user,
         login,
         logout,
+        updateUser,
         isAuthenticated,
         isLoading,
       }}

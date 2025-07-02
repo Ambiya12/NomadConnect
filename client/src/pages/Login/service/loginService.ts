@@ -1,26 +1,4 @@
-interface LoginResponse {
-  accessToken?: string;
-  refreshToken?: string;
-  message?: string;
-}
-
-interface ProfileResponse {
-  _id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-}
-
-interface LoginResult {
-  user: {
-    id: string;
-    email: string;
-    first_name: string;
-    last_name: string;
-  };
-  accessToken?: string;
-  refreshToken?: string;
-}
+import type { LoginResponse, ProfileResponse, LoginResult } from "../../../types/login";
 
 export const loginUser = async (
   email: string,
@@ -38,7 +16,7 @@ export const loginUser = async (
     const loginData: LoginResponse = await loginResponse.json();
 
     if (!loginResponse.ok) {
-      throw new Error(loginData.message || "Login failed");
+      throw new Error(loginData.message);
     }
 
     const accessToken = loginData.accessToken;
@@ -64,6 +42,7 @@ export const loginUser = async (
       email: profileData.email,
       first_name: profileData.first_name,
       last_name: profileData.last_name,
+      profile_picture: profileData.profile_picture || "", 
     };
 
     return {
