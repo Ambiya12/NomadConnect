@@ -1,153 +1,237 @@
 .profileMenu {
-    position: relative;
-  }
-  
-  .profileButton {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    transition: background-color 0.3s ease;
-  }
-  
-  .profileButton:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-  }
-  
-  .avatar {
-    width: 2rem;
-    height: 2rem;
-    background-color: #f97316;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.875rem;
-    font-weight: 600;
-  }
-  
+  position: relative;
+}
+
+.profileButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.profileButton:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.avatar {
+  position: relative;
+  width: 2rem;
+  height: 2rem;
+  background-color: #f97316;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  overflow: hidden;
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.avatarInitials {
+  display: block;
+}
+
+.avatarFallback {
+  display: none;
+}
+
+.userName {
+  font-weight: 500;
+  color: #292524;
+  display: none;
+}
+
+.chevron {
+  width: 1rem;
+  height: 1rem;
+  color: #6b7280;
+  transition: transform 0.3s ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  min-width: 16rem;
+  z-index: 50;
+}
+
+.userInfo {
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.avatarLarge {
+  position: relative;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: #f97316;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 600;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.avatarImageLarge {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.avatarInitialsLarge {
+  display: block;
+}
+
+.avatarFallbackLarge {
+  display: none;
+}
+
+.userDetails {
+  flex: 1;
+  min-width: 0;
+}
+
+.fullName {
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.25rem;
+}
+
+.email {
+  font-size: 0.875rem;
+  color: #6b7280;
+  word-break: break-all;
+}
+
+.divider {
+  height: 1px;
+  background-color: #e5e7eb;
+  margin: 0.5rem 0;
+}
+
+.menuItems {
+  padding: 0.5rem;
+}
+
+.menuItem {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 0.375rem;
+  transition: background-color 0.3s ease;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.menuItem:hover {
+  background-color: #f3f4f6;
+}
+
+.menuIcon {
+  width: 1rem;
+  height: 1rem;
+  color: #6b7280;
+}
+
+.signOutItem {
+  color: #dc2626;
+}
+
+.signOutItem:hover {
+  background-color: #fef2f2;
+}
+
+.signOutItem .menuIcon {
+  color: #dc2626;
+}
+
+/* Dark mode styles */
+:global(.dark) .profileButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+:global(.dark) .userName {
+  color: #f3f4f6;
+}
+
+:global(.dark) .dropdown {
+  background: #1f2937;
+  border-color: #374151;
+}
+
+:global(.dark) .fullName {
+  color: #f3f4f6;
+}
+
+:global(.dark) .email {
+  color: #9ca3af;
+}
+
+:global(.dark) .divider {
+  background-color: #374151;
+}
+
+:global(.dark) .menuItem {
+  color: #f3f4f6;
+}
+
+:global(.dark) .menuItem:hover {
+  background-color: #374151;
+}
+
+:global(.dark) .menuIcon {
+  color: #9ca3af;
+}
+
+:global(.dark) .signOutItem {
+  color: #ef4444;
+}
+
+:global(.dark) .signOutItem:hover {
+  background-color: #7f1d1d;
+}
+
+:global(.dark) .signOutItem .menuIcon {
+  color: #ef4444;
+}
+
+@media (min-width: 768px) {
   .userName {
-    font-weight: 500;
-    color: #292524;
-    display: none;
+    display: block;
   }
-  
-  .chevron {
-    width: 1rem;
-    height: 1rem;
-    color: #6b7280;
-    transition: transform 0.3s ease;
-  }
-  
-  .chevronOpen {
-    transform: rotate(180deg);
-  }
-  
-  .dropdown {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    margin-top: 0.5rem;
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 0.5rem;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    min-width: 16rem;
-    z-index: 50;
-  }
-  
-  .userInfo {
-    padding: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-  
-  .avatarLarge {
-    width: 2.5rem;
-    height: 2.5rem;
-    background-color: #f97316;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    font-weight: 600;
-    flex-shrink: 0;
-  }
-  
-  .userDetails {
-    flex: 1;
-    min-width: 0;
-  }
-  
-  .fullName {
-    font-weight: 600;
-    color: #1f2937;
-    margin-bottom: 0.25rem;
-  }
-  
-  .email {
-    font-size: 0.875rem;
-    color: #6b7280;
-    word-break: break-all;
-  }
-  
-  .divider {
-    height: 1px;
-    background-color: #e5e7eb;
-    margin: 0.5rem 0;
-  }
-  
-  .menuItems {
-    padding: 0.5rem;
-  }
-  
-  .menuItem {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem;
-    border: none;
-    background: none;
-    cursor: pointer;
-    border-radius: 0.375rem;
-    transition: background-color 0.3s ease;
-    font-size: 0.875rem;
-    color: #374151;
-  }
-  
-  .menuItem:hover {
-    background-color: #f3f4f6;
-  }
-  
-  .menuIcon {
-    width: 1rem;
-    height: 1rem;
-    color: #6b7280;
-  }
-  
-  .signOutItem {
-    color: #dc2626;
-  }
-  
-  .signOutItem:hover {
-    background-color: #fef2f2;
-  }
-  
-  .signOutItem .menuIcon {
-    color: #dc2626;
-  }
-  
-  @media (min-width: 768px) {
-    .userName {
-      display: block;
-    }
-  }
+}

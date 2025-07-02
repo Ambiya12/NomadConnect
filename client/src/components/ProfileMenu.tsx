@@ -1,8 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Person, Language, Logout, ExpandMore } from "@mui/icons-material";
-import { useAuth } from "../pages/Login/hooks/AuthContext";
-import { useNavigate } from "react-router-dom";
-import styles from "./ProfileMenu.module.css";
+import React, { useState, useRef, useEffect } from 'react';
+import { Person, Language, Logout, ExpandMore } from '@mui/icons-material';
+import { useAuth } from '../pages/Login/hooks/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { getImageUrl } from '../utils/destinationUtils';
+import styles from './ProfileMenu.module.css';
 
 const ProfileMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,9 +18,9 @@ const ProfileMenu: React.FC = () => {
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
@@ -27,19 +28,22 @@ const ProfileMenu: React.FC = () => {
     try {
       await logout();
       setIsOpen(false);
-      navigate("/");
+      navigate('/');
     } catch (error) {
-      console.error("Logout failed:", error);
+      console.error('Logout failed:', error);
       setIsOpen(false);
-      navigate("/");
+      navigate('/');
     }
   };
 
+  const handleProfileClick = () => {
+    setIsOpen(false);
+    navigate('/profile');
+  };
+
   const getInitials = () => {
-    if (!user) return "U";
-    return `${user.first_name.charAt(0)}${user.last_name.charAt(
-      0
-    )}`.toUpperCase();
+    if (!user) return 'U';
+    return `${user.first_name.charAt(0)}${user.last_name.charAt(0)}`.toUpperCase();
   };
 
   if (!user) return null;
@@ -50,29 +54,61 @@ const ProfileMenu: React.FC = () => {
         onClick={() => setIsOpen(!isOpen)}
         className={styles.profileButton}
       >
-        <div className={styles.avatar}>{getInitials()}</div>
-        <span className={styles.userName}>{user.first_name}</span>
-        <ExpandMore
-          className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ""}`}
-        />
+        <div className={styles.avatar}>
+          {user.profile_picture ? (
+            <img 
+              src={getImageUrl(user.profile_picture)} 
+              alt="Profile" 
+              className={styles.avatarImage}
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = 'none';
+                (e.target as HTMLImageElement).nextElementSibling!.textContent = getInitials();
+              }}
+            />
+          ) : null}
+          <span className={user.profile_picture ? styles.avatarFallback : styles.avatarInitials}>
+            {getInitials()}
+          </span>
+        </div>
+        <span className={styles.userName}>
+          {user.first_name}
+        </span>
+        <ExpandMore className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ''}`} />
       </button>
 
       {isOpen && (
         <div className={styles.dropdown}>
           <div className={styles.userInfo}>
-            <div className={styles.avatarLarge}>{getInitials()}</div>
+            <div className={styles.avatarLarge}>
+              {user.profile_picture ? (
+                <img 
+                  src={getImageUrl(user.profile_picture)} 
+                  alt="Profile" 
+                  className={styles.avatarImageLarge}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = 'none';
+                    (e.target as HTMLImageElement).nextElementSibling!.textContent = getInitials();
+                  }}
+                />
+              ) : null}
+              <span className={user.profile_picture ? styles.avatarFallbackLarge : styles.avatarInitialsLarge}>
+                {getInitials()}
+              </span>
+            </div>
             <div className={styles.userDetails}>
               <p className={styles.fullName}>
                 {user.first_name} {user.last_name}
               </p>
-              <p className={styles.email}>{user.email}</p>
+              <p className={styles.email}>
+                {user.email}
+              </p>
             </div>
           </div>
 
           <div className={styles.divider}></div>
 
           <div className={styles.menuItems}>
-            <button className={styles.menuItem}>
+            <button className={styles.menuItem} onClick={handleProfileClick}>
               <Person className={styles.menuIcon} />
               <span>Profile</span>
             </button>
@@ -84,7 +120,7 @@ const ProfileMenu: React.FC = () => {
 
             <div className={styles.divider}></div>
 
-            <button
+            <button 
               className={`${styles.menuItem} ${styles.signOutItem}`}
               onClick={handleSignOut}
             >
