@@ -8,6 +8,8 @@ import DestinationDetailPage from './pages/Destination/DestinationDetail/Destina
 import CreateDestinationPage from './pages/Destination/createDestination/CreateDestination';
 import TravelTipsPage from './pages/TravelTips/TravelTipsPage';
 import AboutUsPage from './pages/AboutUs/AboutUsPage';
+import ProfilePage from './pages/Profile/ProfilePage';
+import PublicProfilePage from './pages/Profile/PublicProfilePage';
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
           <Route path="/create-destination" element={<CreateDestinationPage/>} />
           <Route path="/travel-tips" element={<TravelTipsPage />} />
           <Route path="/about" element={<AboutUsPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/profile/:userId" element={<PublicProfilePage />} />
         </Routes>
       </Layout>
     </Router>
