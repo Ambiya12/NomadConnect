@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CalendarToday } from '@mui/icons-material';
 import type { User } from '../../types/destination';
 import { formatDate } from '../../utils/destinationUtils';
@@ -10,8 +11,14 @@ interface AuthorCardProps {
 }
 
 const AuthorCard: React.FC<AuthorCardProps> = ({ author, publishDate }) => {
+  const navigate = useNavigate();
+
   const getInitials = () => {
     return `${author.first_name.charAt(0)}${author.last_name.charAt(0)}`.toUpperCase();
+  };
+
+  const handleAuthorClick = () => {
+    navigate(`/profile/${author._id}`);
   };
 
   return (
@@ -21,7 +28,11 @@ const AuthorCard: React.FC<AuthorCardProps> = ({ author, publishDate }) => {
           {getInitials()}
         </div>
         <div className={styles.authorInfo}>
-          <h3 className={styles.authorName}>
+          <h3 
+            className={styles.authorName}
+            onClick={handleAuthorClick}
+            style={{ cursor: 'pointer' }}
+          >
             {author.first_name} {author.last_name}
           </h3>
           <p className={styles.authorRole}>Travel Explorer</p>

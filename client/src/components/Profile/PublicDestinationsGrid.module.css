@@ -1,0 +1,121 @@
+.emptyState {
+  text-align: center;
+  padding: 4rem 2rem;
+  max-width: 24rem;
+  margin: 4rem auto;
+}
+
+.emptyIcon {
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 1.5rem;
+  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  border: 2px solid #f3f4f6;
+}
+
+.emptyState h3 {
+  font-size: 1.5rem;
+  color: #262626;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.emptyState p {
+  color: #8e8e8e;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.destinationsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: #dbdbdb;
+}
+
+.destinationCard {
+  background: white;
+  aspect-ratio: 1;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.destinationCard:hover .imageOverlay {
+  opacity: 1;
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.destinationImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.imageOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlayStats {
+  display: flex;
+  gap: 1.5rem;
+  color: white;
+  font-weight: 600;
+}
+
+.overlayStat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.overlayIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: white;
+}
+
+@media (max-width: 480px) {
+  .destinationsGrid {
+    gap: 1px;
+  }
+  
+  .overlayStats {
+    gap: 1rem;
+  }
+  
+  .overlayStat {
+    font-size: 0.875rem;
+  }
+
+  .emptyState {
+    padding: 3rem 1.5rem;
+  }
+
+  .emptyIcon {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .emptyState h3 {
+    font-size: 1.25rem;
+  }
+}

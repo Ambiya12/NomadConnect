@@ -34,6 +34,11 @@
   font-weight: 600;
   color: #1f2937;
   margin-bottom: 0.25rem;
+  transition: color 0.3s ease;
+}
+
+.authorName:hover {
+  color: #f97316;
 }
 
 .authorRole {
