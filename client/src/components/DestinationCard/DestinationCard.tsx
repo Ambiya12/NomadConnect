@@ -3,44 +3,27 @@ import { Link } from "react-router-dom";
 import { ArrowForward, Person, LocationOn } from "@mui/icons-material";
 import type { Destination } from "../../types/destination";
 import styles from "./DestinationCard.module.css";
+import { formatDate, getImageUrl } from "../../utils/destinationUtils";
 
 interface DestinationCardProps {
   destination: Destination;
 }
 
 const DestinationCard: React.FC<DestinationCardProps> = ({ destination }) => {
-  const getImageUrl = (imagePath: string) => {
-    if (imagePath.startsWith("http")) {
-      return imagePath;
-    }
-    const cleanPath = imagePath.startsWith("public/")
-      ? imagePath.substring(7)
-      : imagePath;
-    return `http://localhost:8000/${cleanPath}`;
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
 
   return (
     <div className={styles.destinationCard}>
       <div className={styles.imageContainer}>
         <img
           src={
-            destination.images.length > 0
-              ? getImageUrl(destination.images[0])
-              : "https://images.pexels.com/photos/1450353/pexels-photo-1450353.jpeg?auto=compress&cs=tinysrgb&w=600"
+        destination.images.length > 0
+          ? getImageUrl(destination.images[0])
+          : ""
           }
           alt={destination.name}
           className={styles.destinationImage}
           onError={(e) => {
-            (e.target as HTMLImageElement).src =
-              "https://images.pexels.com/photos/1450353/pexels-photo-1450353.jpeg?auto=compress&cs=tinysrgb&w=600";
+        (e.target as HTMLImageElement).src = "";
           }}
         />
         <div className={styles.imageOverlay}></div>
