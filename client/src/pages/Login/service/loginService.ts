@@ -10,7 +10,7 @@ export const loginUser = async (
     const loginResponse = await fetch(`${API_URL}/api/login/`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/text",
       },
       body: JSON.stringify({ email, password }),
     });
