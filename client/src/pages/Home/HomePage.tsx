@@ -39,7 +39,7 @@ const HomePage: React.FC = () => {
     <>
       <div className={styles.heroContainer}>
         <img
-          src="public/images/worldTourLine.jpg"
+          src="/images/worldTourLine.jpg"
           alt="World landmarks illustration"
           className={styles.heroImage}
         />
