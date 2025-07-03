@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../Login/hooks/AuthContext";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const useLikes = (destinationId: string, initialLikes: string[]) => {
   const { user } = useAuth();
   const [isLiked, setIsLiked] = useState(false);
@@ -17,7 +19,7 @@ export const useLikes = (destinationId: string, initialLikes: string[]) => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `http://localhost:8000/api/destinations/${destinationId}/like`,
+        `${API_URL}/api/destinations/${destinationId}/like`,
         {
           method: "PATCH",
           headers: {

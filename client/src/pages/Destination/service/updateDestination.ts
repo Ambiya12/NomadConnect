@@ -1,5 +1,7 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const fetchDestinationById = async (id: string, token: string) => {
-  const response = await fetch(`http://localhost:8000/api/destinations/${id}`, {
+  const response = await fetch(`${API_URL}/api/destinations/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -14,7 +16,7 @@ export const fetchDestinationById = async (id: string, token: string) => {
 };
 
 export const updateDestinationById = async (id: string, token: string, updateData: Record<string, unknown>) => {
-  const response = await fetch(`http://localhost:8000/api/destinations/${id}`, {
+  const response = await fetch(`${API_URL}/api/destinations/${id}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',

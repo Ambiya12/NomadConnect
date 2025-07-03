@@ -1,9 +1,11 @@
 import type { Destination } from '../../../types/destination';
 import type { UserStats } from '../../../types/profile';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const fetchUserDestinations = async (userId: string): Promise<{ destinations: Destination[]; stats: UserStats }> => {
   const token = localStorage.getItem('token');
-  const response = await fetch('http://localhost:8000/api/destinations', {
+  const response = await fetch(`${API_URL}/api/destinations`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -33,7 +35,7 @@ export const fetchUserDestinations = async (userId: string): Promise<{ destinati
 
 export const deleteDestination = async (destinationId: string): Promise<void> => {
   const token = localStorage.getItem('token');
-  const response = await fetch(`http://localhost:8000/api/destinations/${destinationId}`, {
+  const response = await fetch(`${API_URL}/api/destinations/${destinationId}`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${token}`,
