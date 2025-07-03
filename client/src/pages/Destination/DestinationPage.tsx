@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Add, ArrowForward } from "@mui/icons-material";
+import { Add } from "@mui/icons-material";
 import { useAuth } from "../Login/hooks/AuthContext";
 import { useDestinations } from "./service/useDestinations";
 import { filterDestinations } from "../../utils/destinationUtils";
@@ -62,7 +62,7 @@ const DestinationPage: React.FC = () => {
           />
 
           {isAuthenticated && (
-            <div className={styles.addDestinationContainer}>
+            <div>
               <Link
                 to="/create-destination"
                 className={styles.addDestinationButton}
@@ -88,27 +88,6 @@ const DestinationPage: React.FC = () => {
                 />
               ))}
             </div>
-          )}
-        </div>
-      </section>
-
-      <section className={styles.contributeSection}>
-        <div className={styles.contributeContainer}>
-          <h2 className={styles.contributeTitle}>Contribute Your Spot?</h2>
-          <p className={styles.contributeDescription}>
-            Know a hidden gem that deserves to be shared? Help fellow travelers
-            discover amazing places by contributing your secret spots.
-          </p>
-          {isAuthenticated ? (
-            <Link to="/create-destination" className={styles.contributeButton}>
-              Share Your Discovery
-              <ArrowForward className={styles.buttonIcon} />
-            </Link>
-          ) : (
-            <Link to="/login" className={styles.contributeButton}>
-              Login to Share
-              <ArrowForward className={styles.buttonIcon} />
-            </Link>
           )}
         </div>
       </section>

@@ -2,19 +2,11 @@
   background: white;
   border-radius: 0.75rem;
   overflow: hidden;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
   cursor: pointer;
-}
-
-.destinationCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
 }
 
 .imageContainer {
   position: relative;
-  overflow: hidden;
   height: 16rem;
 }
 
@@ -33,18 +25,12 @@
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.3);
-  transition: background 0.3s ease;
-}
-
-.destinationCard:hover .imageOverlay {
-  background: rgba(0, 0, 0, 0.4);
 }
 
 .destinationName {
   position: absolute;
   bottom: 1rem;
   left: 1rem;
-  right: 1rem;
   color: white;
 }
 
@@ -52,7 +38,6 @@
   font-size: 1.5rem;
   font-weight: bold;
   margin: 0;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .cardContent {
@@ -67,14 +52,11 @@
 }
 
 .locationIcon {
-  width: 1rem;
-  height: 1rem;
   color: #f97316;
 }
 
 .locationText {
   font-size: 0.875rem;
-  color: #6b7280;
 }
 
 .authorInfo {
@@ -86,18 +68,11 @@
 }
 
 .authorIcon {
-  width: 1rem;
-  height: 1rem;
   color: #9ca3af;
 }
 
 .authorText {
-  color: #374151;
   font-weight: 500;
-}
-
-.publishDate {
-  color: #9ca3af;
 }
 
 .tags {
@@ -117,7 +92,6 @@
 }
 
 .description {
-  color: #6b7280;
   line-height: 1.6;
   margin-bottom: 1.5rem;
 }
@@ -132,13 +106,6 @@
   display: flex;
   gap: 1rem;
   font-size: 0.875rem;
-  color: #9ca3af;
-}
-
-.likesCount,
-.commentsCount {
-  display: flex;
-  align-items: center;
 }
 
 .readMoreButton {
@@ -151,15 +118,4 @@
   border-radius: 0.5rem;
   font-weight: 600;
   font-size: 0.875rem;
-  text-decoration: none;
-  transition: background-color 0.3s ease;
-}
-
-.readMoreButton:hover {
-  background-color: #ea580c;
-}
-
-.buttonIcon {
-  width: 1rem;
-  height: 1rem;
 }
