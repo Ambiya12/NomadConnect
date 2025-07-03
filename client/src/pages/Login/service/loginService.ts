@@ -1,11 +1,13 @@
 import type { LoginResponse, ProfileResponse, LoginResult } from "../../../types/login";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const loginUser = async (
   email: string,
   password: string
 ): Promise<LoginResult> => {
   try {
-    const loginResponse = await fetch("http://localhost:8000/api/login/", {
+    const loginResponse = await fetch(`${API_URL}/api/login/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -24,7 +26,7 @@ export const loginUser = async (
       throw new Error("No access token received");
     }
 
-    const profileResponse = await fetch("http://localhost:8000/api/profile/", {
+    const profileResponse = await fetch("${API_URL}/api/profile/", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${accessToken}`,

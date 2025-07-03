@@ -12,6 +12,8 @@ interface RegisterResponse {
   refreshToken?: string;
 }
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const registerUser = async (
   firstName: string,
   lastName: string,
@@ -35,7 +37,7 @@ export const registerUser = async (
       formData.append('profile_picture', profilePicture);
     }
 
-    const response = await fetch('http://localhost:8000/api/register/', {
+    const response = await fetch(`${API_URL}/api/register/`, {
       method: 'POST',
       body: formData,
     });

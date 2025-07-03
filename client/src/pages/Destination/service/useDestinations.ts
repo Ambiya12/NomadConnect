@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import type { Destination } from "../../../types/destination";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const useDestinations = () => {
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [loading, setLoading] = useState(true);
@@ -10,7 +12,7 @@ export const useDestinations = () => {
     try {
       setLoading(true);
       setError("");
-      const response = await fetch("http://localhost:8000/api/destinations");
+      const response = await fetch(`${API_URL}/api/destinations`);
 
       if (!response.ok) {
         throw new Error("Failed to fetch destinations");

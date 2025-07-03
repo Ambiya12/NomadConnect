@@ -24,6 +24,8 @@ interface AuthContextType {
   isLoading: boolean;
 }
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const useAuth = () => {
@@ -70,7 +72,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const validateSession = async (token: string): Promise<boolean> => {
     try {
-      const response = await fetch("http://localhost:8000/api/profile/", {
+      const response = await fetch(`${API_URL}/api/profile/`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,

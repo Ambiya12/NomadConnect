@@ -1,7 +1,9 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const getCoordinatesForLocation = async (country: string, city: string, address: string): Promise<[number, number]> => {
   try {
     const response = await fetch(
-      `http://localhost:8000/api/geocode?country=${encodeURIComponent(country)}&city=${encodeURIComponent(city)}&address=${encodeURIComponent(address)}`
+      `${API_URL}/api/geocode?country=${encodeURIComponent(country)}&city=${encodeURIComponent(city)}&address=${encodeURIComponent(address)}`
     );
     const result = await response.json();
 

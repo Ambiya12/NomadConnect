@@ -2,6 +2,8 @@ import type { PublicUserProfile } from '../../../types/profile';
 import type { Destination } from '../../../types/destination';
 import type { UserStats } from '../../../types/profile';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const handleFetchError = (response: Response, notFoundMessage: string, defaultMessage: string): void => {
   if (!response.ok) {
     if (response.status === 404) {
@@ -12,7 +14,7 @@ const handleFetchError = (response: Response, notFoundMessage: string, defaultMe
 };
 
 export const fetchPublicUserProfile = async (userId: string): Promise<PublicUserProfile> => {
-  const response = await fetch(`http://localhost:8000/api/user/${userId}`);
+  const response = await fetch(`${API_URL}/api/user/${userId}`);
   handleFetchError(response, 'User profile not found', 'Failed to fetch user profile');
 
   const data = await response.json();
@@ -27,7 +29,7 @@ export const fetchPublicUserProfile = async (userId: string): Promise<PublicUser
 };
 
 export const fetchPublicUserDestinations = async (userId: string): Promise<{ destinations: Destination[]; stats: UserStats }> => {
-  const response = await fetch('http://localhost:8000/api/destinations');
+  const response = await fetch('${API_URL}/api/destinations');
   handleFetchError(response, '', 'Failed to fetch destinations');
 
   const allDestinations = await response.json();

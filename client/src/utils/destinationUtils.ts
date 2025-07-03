@@ -1,3 +1,5 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const getImageUrl = (imagePath: string): string => {
   if (imagePath.startsWith("http")) {
     return imagePath;
@@ -5,7 +7,7 @@ export const getImageUrl = (imagePath: string): string => {
   const cleanPath = imagePath.startsWith("public/")
     ? imagePath.substring(7)
     : imagePath;
-  return `http://localhost:8000/${cleanPath}`;
+  return `${API_URL}/${cleanPath}`;
 };
 
 export const formatDate = (dateString: string): string => {

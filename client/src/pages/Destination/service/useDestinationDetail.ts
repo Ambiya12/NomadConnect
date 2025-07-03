@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import type { Destination, User } from "../../../types/destination";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const useDestinationDetail = (id: string | undefined) => {
   const [destination, setDestination] = useState<Destination | null>(null);
   const [loading, setLoading] = useState(true);
@@ -14,7 +16,7 @@ export const useDestinationDetail = (id: string | undefined) => {
     try {
       setLoading(true);
       const response = await fetch(
-        `http://localhost:8000/api/destinations/${id}`
+        `${API_URL}/api/destinations/${id}`
       );
 
       if (!response.ok) {
@@ -52,7 +54,7 @@ export const useDestinationDetail = (id: string | undefined) => {
       for (const userId of uniqueUserIds) {
         try {
           const response = await fetch(
-            `http://localhost:8000/api/profile/${userId}`,
+            `${API_URL}/api/profile/${userId}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
