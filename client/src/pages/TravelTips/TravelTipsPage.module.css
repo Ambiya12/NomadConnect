@@ -1,11 +1,11 @@
 .container {
-    min-height: 100vh;
+    min-height: 80vh;
     background: white;
   }
   
   .headerSection {
     background: linear-gradient(to bottom, #dbeafe, white);
-    padding: 4rem 1rem;
+    padding: 2rem 1rem;
   }
   
   .headerContainer {
@@ -18,23 +18,19 @@
     font-size: 2.5rem;
     font-weight: bold;
     color: #1f2937;
-    margin-bottom: 2rem;
   }
   
-  .tipsSection {
-    padding: 4rem 1rem;
-  }
   
   .tipsContainer {
     max-width: 1400px;
     margin: 0 auto;
+    padding: 2rem 1rem;
   }
   
   .tipsGrid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 2rem;
-    margin-bottom: 4rem;
   }
   
   .tipCategory {
@@ -138,112 +134,6 @@
     height: 0.75rem;
   }
   
-  .featuredSection {
-    padding: 4rem 1rem;
-    background: #f9fafb;
-  }
-  
-  .featuredContainer {
-    max-width: 64rem;
-    margin: 0 auto;
-  }
-  
-  .featuredTitle {
-    font-size: 1.875rem;
-    font-weight: bold;
-    color: #1f2937;
-    margin-bottom: 2rem;
-    text-align: center;
-  }
-  
-  .featuredList {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-  
-  .featuredArticle {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s ease;
-    cursor: pointer;
-  }
-  
-  .featuredArticle:hover {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  }
-  
-  .featuredContent {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  
-  .featuredMeta {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.5rem;
-  }
-  
-  .categoryTag {
-    background-color: #fed7aa;
-    color: #c2410c;
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding: 0.25rem 0.5rem;
-    border-radius: 9999px;
-  }
-  
-  .featuredReadTime {
-    color: #9ca3af;
-    font-size: 0.875rem;
-    margin-left: 0.75rem;
-  }
-  
-  .featuredArticleTitle {
-    font-size: 1.25rem;
-    font-weight: bold;
-    color: #1f2937;
-    margin-bottom: 0.5rem;
-  }
-  
-  .featuredDescription {
-    color: #6b7280;
-    margin-bottom: 0.5rem;
-  }
-  
-  .author {
-    font-size: 0.875rem;
-    color: #9ca3af;
-  }
-  
-  .featuredButton {
-    background-color: #f97316;
-    color: white;
-    padding: 0.5rem 1.5rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    transition: background-color 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    margin-top: 1rem;
-    align-self: flex-start;
-  }
-  
-  .featuredButton:hover {
-    background-color: #ea580c;
-  }
-  
-  .newsletterSection {
-    padding: 4rem 1rem;
-    background: white;
-  }
-  
   .newsletterContainer {
     max-width: 32rem;
     margin: 0 auto;
@@ -313,15 +203,5 @@
     
     .tipsGrid {
       grid-template-columns: repeat(3, 1fr);
-    }
-    
-    .featuredContent {
-      flex-direction: row;
-      align-items: center;
-    }
-    
-    .featuredButton {
-      margin-top: 0;
-      margin-left: 1.5rem;
     }
   }

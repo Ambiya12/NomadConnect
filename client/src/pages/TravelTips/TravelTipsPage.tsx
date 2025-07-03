@@ -48,30 +48,6 @@ const TravelTipsPage: React.FC = () => {
     }
   ];
 
-  const featuredArticles = [
-    {
-      title: 'The Ultimate Guide to Travel Photography',
-      description: 'Capture stunning memories without expensive equipment',
-      category: 'Photography',
-      readTime: '12 min read',
-      author: 'Sarah Chen'
-    },
-    {
-      title: 'How to Find Authentic Local Food',
-      description: 'Skip tourist traps and eat where locals eat',
-      category: 'Food & Culture',
-      readTime: '7 min read',
-      author: 'Miguel Rodriguez'
-    },
-    {
-      title: 'Sustainable Travel: Leave Only Footprints',
-      description: 'Travel responsibly and support local communities',
-      category: 'Sustainable Travel',
-      readTime: '10 min read',
-      author: 'Emma Thompson'
-    }
-  ];
-
   return (
     <div className={styles.container}>
       <section className={styles.headerSection}>
@@ -84,7 +60,6 @@ const TravelTipsPage: React.FC = () => {
       </section>
 
   
-      <section className={styles.tipsSection}>
         <div className={styles.tipsContainer}>
           <div className={styles.tipsGrid}>
             {tipCategories.map((category) => (
@@ -117,47 +92,7 @@ const TravelTipsPage: React.FC = () => {
             ))}
           </div>
         </div>
-      </section>
 
-      <section className={styles.featuredSection}>
-        <div className={styles.featuredContainer}>
-          <h2 className={styles.featuredTitle}>
-            Most Popular Travel Tips
-          </h2>
-          
-          <div className={styles.featuredList}>
-            {featuredArticles.map((article, index) => (
-              <div key={index} className={styles.featuredArticle}>
-                <div className={styles.featuredContent}>
-                  <div style={{ flex: 1 }}>
-                    <div className={styles.featuredMeta}>
-                      <span className={styles.categoryTag}>
-                        {article.category}
-                      </span>
-                      <span className={styles.featuredReadTime}>{article.readTime}</span>
-                    </div>
-                    <h3 className={styles.featuredArticleTitle}>
-                      {article.title}
-                    </h3>
-                    <p className={styles.featuredDescription}>
-                      {article.description}
-                    </p>
-                    <p className={styles.author}>By {article.author}</p>
-                  </div>
-                  <div>
-                    <button className={styles.featuredButton}>
-                      Read More
-                      <ArrowForward className={styles.buttonIcon} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className={styles.newsletterSection}>
         <div className={styles.newsletterContainer}>
           <h2 className={styles.newsletterTitle}>
             Get Weekly Travel Tips
@@ -176,7 +111,6 @@ const TravelTipsPage: React.FC = () => {
             </button>
           </div>
         </div>
-      </section>
     </div>
   );
 };
