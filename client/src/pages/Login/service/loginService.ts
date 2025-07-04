@@ -10,7 +10,7 @@ export const loginUser = async (
     const loginResponse = await fetch(`${API_URL}/api/login/`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/text",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ email, password }),
     });
@@ -26,7 +26,7 @@ export const loginUser = async (
       throw new Error("No access token received");
     }
 
-    const profileResponse = await fetch("${API_URL}/api/profile/", {
+    const profileResponse = await fetch(`${API_URL}/api/profile/`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${accessToken}`,
