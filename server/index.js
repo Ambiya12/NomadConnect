@@ -10,7 +10,7 @@ import destinationRouter from './routes/destination.js';
 import geocodeRouter from './routes/geocode.js';
 import userRouter from './routes/user.js';
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8080;
 const app = express();
 const __dirname = path.resolve();
 
@@ -22,7 +22,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/images/profiles', express.static(path.resolve('public/images/profiles')));
 app.use('/images/destinations', express.static(path.resolve('public/images/destinations')));
 
-app.use('/api', authRouter, userRouter, destinationRouter, geocodeRouter);
+app.use('/api', authRouter);
+app.use('/api', userRouter);
+app.use('/api', destinationRouter);
+app.use('/api', geocodeRouter);
 
 app.get('/images', (req, res) => {
   fs.readdir('public/images', (err, files) => {
