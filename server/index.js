@@ -15,9 +15,12 @@ const app = express();
 const __dirname = path.resolve();
 
 app.use(compression());
-app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors({
+  origin: 'https://nomadconnect.up.railway.app', 
+  credentials: true
+}));
 
 app.use('/images/profiles', express.static(path.resolve('public/images/profiles')));
 app.use('/images/destinations', express.static(path.resolve('public/images/destinations')));
