@@ -1,5 +1,6 @@
 import Destination from "../model/Destination.js";
 import { getCoordinatesForLocation } from "../utils/geocoding.js";
+import { uploadToFirebase } from "../utils/uploadToFirebase.js";
 
 export const createDestination = async (req, res) => {
   try {
@@ -11,15 +12,20 @@ export const createDestination = async (req, res) => {
     const coordinates = await getCoordinatesForLocation(country, city, address);
     const location = {
       type: "Point",
-      coordinates: coordinates,
+      coordinates,
     };
 
-    const imagePaths = req.files?.map((file) => file.path) || [];
+    const imageUploadPromises = req.files.map(file => {
+      const fileName = `${Date.now()}-${file.originalname}`;
+      return uploadToFirebase(file.buffer, fileName, file.mimetype, 'destinations');
+    });
+
+    const imageUrls = await Promise.all(imageUploadPromises);
 
     const newDestination = new Destination({
       name,
       description,
-      images: imagePaths,
+      images: imageUrls,
       location,
       tags: Array.isArray(tags) ? tags : JSON.parse(tags),
       address: address.trim(),
