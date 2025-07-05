@@ -13,7 +13,6 @@ const PublicProfileHeader: React.FC<PublicProfileHeaderProps> = ({ userProfile, 
     return `${userProfile.first_name.charAt(0)}${userProfile.last_name.charAt(0)}`.toUpperCase();
   };
 
-
   return (
     <div className={styles.profileHeader}>
       <div className={styles.avatarSection}>
@@ -36,7 +35,10 @@ const PublicProfileHeader: React.FC<PublicProfileHeaderProps> = ({ userProfile, 
       <div className={styles.profileInfo}>
         <div className={styles.nameSection}>
           <h1 className={styles.fullName}>
-            {userProfile.first_name.toLowerCase()}{userProfile.last_name.toLowerCase()}
+            {userProfile && userProfile.first_name && userProfile.last_name ? 
+              `${userProfile.first_name.toLowerCase()}${userProfile.last_name.toLowerCase()}` : 
+              'unknown'
+            }
           </h1>
         </div>
         

@@ -14,7 +14,9 @@ const AuthorCard: React.FC<AuthorCardProps> = ({ author, publishDate }) => {
   const navigate = useNavigate();
 
   const getInitials = () => {
-    return `${author.first_name.charAt(0)}${author.last_name.charAt(0)}`.toUpperCase();
+    const firstName = author.first_name || '';
+    const lastName = author.last_name || '';
+    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
   };
 
   const handleAuthorClick = () => {

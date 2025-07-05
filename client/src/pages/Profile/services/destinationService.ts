@@ -17,7 +17,7 @@ export const fetchUserDestinations = async (userId: string): Promise<{ destinati
 
   const allDestinations = await response.json();
   const userDestinations = allDestinations.filter(
-    (dest: Destination) => dest.created_by._id === userId
+    (dest: Destination) => dest.created_by && dest.created_by._id === userId
   );
 
   const totalLikes = userDestinations.reduce(

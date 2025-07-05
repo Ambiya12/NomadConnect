@@ -1,16 +1,22 @@
 import React from 'react';
-import { getImageUrl } from '../../utils/destinationUtils';
-import styles from './ProfileHeader.module.css';
+import { Edit } from '@mui/icons-material';
 import type { UserProfile, UserStats } from '../../types/profile';
+import styles from './ProfileHeader.module.css';
+import { getImageUrl } from '../../utils/destinationUtils';
 
 interface ProfileHeaderProps {
+  user: {
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
   userProfile: UserProfile;
   stats: UserStats;
 }
 
-const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userProfile, stats }) => {
+const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user, userProfile, stats }) => {
   const getInitials = () => {
-    return `${userProfile.first_name.charAt(0)}${userProfile.last_name.charAt(0)}`.toUpperCase();
+    return `${user.first_name.charAt(0)}${user.last_name.charAt(0)}`.toUpperCase();
   };
 
   return (
@@ -35,8 +41,15 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userProfile, stats }) => 
       <div className={styles.profileInfo}>
         <div className={styles.nameSection}>
           <h1 className={styles.fullName}>
-            {userProfile.first_name.toLowerCase()}{userProfile.last_name.toLowerCase()}
+            {user && user.first_name && user.last_name ? 
+              `${user.first_name.toLowerCase()}${user.last_name.toLowerCase()}` : 
+              'unknown'
+            }
           </h1>
+          <button className={styles.editProfileButton}>
+            <Edit className={styles.buttonIcon} />
+            Edit Profile
+          </button>
         </div>
         
         <div className={styles.stats}>
@@ -49,11 +62,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userProfile, stats }) => 
             <span className={styles.statLabel}>likes</span>
           </div>
         </div>
-        {userProfile.bio && (
-          <div className={styles.bio}>
-            {userProfile.bio}
-          </div>
-        )}
+        
+        <div className={styles.bio}>
+          <p className={styles.email}>{user?.email || 'No email available'}</p>
+        </div>
       </div>
     </div>
   );

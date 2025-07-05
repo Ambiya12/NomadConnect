@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Person, Language, Logout, ExpandMore } from '@mui/icons-material';
+import { Person, Logout, ExpandMore } from '@mui/icons-material';
 import { useAuth } from '../pages/Login/hooks/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { getImageUrl } from '../utils/destinationUtils';
 import styles from './ProfileMenu.module.css';
 
 const ProfileMenu: React.FC = () => {
@@ -18,11 +17,13 @@ const ProfileMenu: React.FC = () => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [isOpen]);
 
   const handleSignOut = async () => {
     try {
@@ -49,26 +50,17 @@ const ProfileMenu: React.FC = () => {
   if (!user) return null;
 
   return (
-    <div className={styles.profileMenu} ref={menuRef}>
+    <div 
+      className={styles.profileMenu} 
+      ref={menuRef}
+      onClick={(e) => e.stopPropagation()}
+    >
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={styles.profileButton}
       >
         <div className={styles.avatar}>
-          {user.profile_picture ? (
-            <img 
-              src={getImageUrl(user.profile_picture)} 
-              alt="Profile" 
-              className={styles.avatarImage}
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = 'none';
-                (e.target as HTMLImageElement).nextElementSibling!.textContent = getInitials();
-              }}
-            />
-          ) : null}
-          <span className={user.profile_picture ? styles.avatarFallback : styles.avatarInitials}>
-            {getInitials()}
-          </span>
+          {getInitials()}
         </div>
         <span className={styles.userName}>
           {user.first_name}
@@ -80,20 +72,7 @@ const ProfileMenu: React.FC = () => {
         <div className={styles.dropdown}>
           <div className={styles.userInfo}>
             <div className={styles.avatarLarge}>
-              {user.profile_picture ? (
-                <img 
-                  src={getImageUrl(user.profile_picture)} 
-                  alt="Profile" 
-                  className={styles.avatarImageLarge}
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
-                    (e.target as HTMLImageElement).nextElementSibling!.textContent = getInitials();
-                  }}
-                />
-              ) : null}
-              <span className={user.profile_picture ? styles.avatarFallbackLarge : styles.avatarInitialsLarge}>
-                {getInitials()}
-              </span>
+              {getInitials()}
             </div>
             <div className={styles.userDetails}>
               <p className={styles.fullName}>
@@ -111,11 +90,6 @@ const ProfileMenu: React.FC = () => {
             <button className={styles.menuItem} onClick={handleProfileClick}>
               <Person className={styles.menuIcon} />
               <span>Profile</span>
-            </button>
-
-            <button className={styles.menuItem}>
-              <Language className={styles.menuIcon} />
-              <span>Language</span>
             </button>
 
             <div className={styles.divider}></div>
