@@ -1,6 +1,7 @@
 import User from "../model/User.js"
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { uploadToFirebase } from "../utils/uploadToFirebase.js";
 
 let refreshTokens = [];
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -18,29 +19,40 @@ const generateRefreshToken = (user) => {
 export const createUser = async (req, res) => {
     const { first_name, last_name, email, password } = req.body;
     try {
-        const emailVerification = await User.findOne({ email });
-        if (emailVerification) return res.status(400).json('Email already exists');
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const profilePicturePath = req.file?.path || '';
-        
-        const newUser = new User({ first_name, last_name, email, password: hashedPassword, profile_picture: profilePicturePath });
-        await newUser.save();
-
-        const accessToken = generateAccessToken(newUser);
-        const refreshToken = generateRefreshToken(newUser);
-
-        return res.status(201).json({
-            message: `Welcome ${first_name} to Nomad Connect`,
-            accessToken,
-            refreshToken
-        });
+      const emailVerification = await User.findOne({ email });
+      if (emailVerification) return res.status(400).json('Email already exists');
+  
+      const hashedPassword = await bcrypt.hash(password, 10);
+  
+      let profilePictureUrl = '';
+      if (req.file) {
+        const fileName = `${Date.now()}-${req.file.originalname}`;
+        profilePictureUrl = await uploadToFirebase(req.file.buffer, fileName, req.file.mimetype, 'profiles');
+      }
+  
+      const newUser = new User({
+        first_name,
+        last_name,
+        email,
+        password: hashedPassword,
+        profile_picture: profilePictureUrl
+      });
+  
+      await newUser.save();
+  
+      const accessToken = generateAccessToken(newUser);
+      const refreshToken = generateRefreshToken(newUser);
+  
+      return res.status(201).json({
+        message: `Welcome ${first_name} to Nomad Connect`,
+        accessToken,
+        refreshToken
+      });
     } catch (err) {
-        console.log(err);
-        return res.status(500).json('Internal server error');
+      console.log(err);
+      return res.status(500).json('Internal server error');
     }
-};
+  };
 
 export const loginUser = async (req, res) => {
     const { email, password } = req.body;
