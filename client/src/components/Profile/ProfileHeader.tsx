@@ -1,5 +1,4 @@
 import React from 'react';
-import { Edit } from '@mui/icons-material';
 import type { UserProfile, UserStats } from '../../types/profile';
 import styles from './ProfileHeader.module.css';
 import { getImageUrl } from '../../utils/destinationUtils';
@@ -9,6 +8,7 @@ interface ProfileHeaderProps {
     first_name: string;
     last_name: string;
     email: string;
+    bio?: string;
   };
   userProfile: UserProfile;
   stats: UserStats;
@@ -46,10 +46,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user, userProfile, stats 
               'unknown'
             }
           </h1>
-          <button className={styles.editProfileButton}>
-            <Edit className={styles.buttonIcon} />
-            Edit Profile
-          </button>
         </div>
         
         <div className={styles.stats}>
@@ -64,7 +60,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user, userProfile, stats 
         </div>
         
         <div className={styles.bio}>
-          <p className={styles.email}>{user?.email || 'No email available'}</p>
+          {user?.bio || 'No bio available'}
         </div>
       </div>
     </div>
