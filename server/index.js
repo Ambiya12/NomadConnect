@@ -14,6 +14,22 @@ const PORT = process.env.PORT || 8080;
 const app = express();
 const __dirname = path.resolve();
 
+const ensureUploadDirs = () => {
+  const uploadDirs = [
+    path.resolve('public/images/profiles'),
+    path.resolve('public/images/destinations')
+  ];
+
+  uploadDirs.forEach(dir => {
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+      console.log(`✅ Created missing upload directory: ${dir}`);
+    }
+  });
+};
+
+ensureUploadDirs();
+
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
