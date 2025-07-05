@@ -7,7 +7,7 @@ export const submitComment = async (
   const token = localStorage.getItem("token");
   try {
     const response = await fetch(
-      `${API_URL}/${destinationId}/comment`,
+      `${API_URL}/api/destinations/${destinationId}/comment`,
       {
         method: "POST",
         headers: {
