@@ -55,7 +55,7 @@ const PublicProfileHeader: React.FC<PublicProfileHeaderProps> = ({ userProfile, 
         
         <div className={styles.bio}>
           <p className={styles.bioText}>
-            {userProfile.bio || 'Travel enthusiast sharing hidden gems around the world ✈️'}
+            {userProfile.bio}
           </p>
         </div>
       </div>
