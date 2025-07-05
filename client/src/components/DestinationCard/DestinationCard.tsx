@@ -43,8 +43,8 @@ const DestinationCard: React.FC<DestinationCardProps> = ({ destination }) => {
         <div className={styles.authorInfo}>
           <Person className={styles.authorIcon} />
           <span className={styles.authorText}>
-            Published by {destination.created_by.first_name}{" "}
-            {destination.created_by.last_name}
+            Published by {destination.created_by?.first_name || "Unknown"}
+            {destination.created_by?.last_name || ""}
           </span>
           <span className={styles.publishDate}>
             • {formatDate(destination.created_at)}
