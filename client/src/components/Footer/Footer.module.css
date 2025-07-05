@@ -1,0 +1,221 @@
+.footer {
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    margin-top: auto;
+  }
+  
+  .footerContainer {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  .footerContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem 0 1rem;
+    text-align: center;
+  }
+  
+  /* Brand Section */
+  .brandSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .footerLogo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: #1f2937;
+    transition: all 0.3s ease;
+  }
+  
+  .footerLogo:hover {
+    color: #f97316;
+    transform: translateY(-1px);
+  }
+  
+  .logoIcon {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: #f97316;
+  }
+  
+  .logoText {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: inherit;
+  }
+  
+  .tagline {
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin: 0;
+    font-style: italic;
+  }
+
+  .socialSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .socialTitle {
+    color: #374151;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: 0.025em;
+  }
+  
+  .socialLinks {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .socialLink {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 50%;
+    color: #6b7280;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .socialLink:hover {
+    color: #f97316;
+    border-color: #f97316;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+  }
+  
+  .socialIcon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  
+  .socialLink:nth-child(1):hover {
+    /* Instagram gradient */
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    color: white;
+    border-color: transparent;
+  }
+  
+  .socialLink:nth-child(2):hover {
+    /* YouTube */
+    background: #ff0000;
+    color: white;
+    border-color: #ff0000;
+  }
+  
+  .socialLink:nth-child(3):hover {
+    /* TikTok */
+    background: #000000;
+    color: white;
+    border-color: #000000;
+  }
+  
+  /* Footer Bottom */
+  .footerBottom {
+    border-top: 1px solid #e2e8f0;
+    padding: 1rem 0;
+    text-align: center;
+  }
+  
+  .copyright {
+    color: #9ca3af;
+    font-size: 0.875rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+  }
+  
+  .heartIcon {
+    width: 0.875rem;
+    height: 0.875rem;
+    color: #ef4444;
+    animation: heartbeat 2s ease-in-out infinite;
+  }
+  
+  @keyframes heartbeat {
+    0%, 50%, 100% {
+      transform: scale(1);
+    }
+    25%, 75% {
+      transform: scale(1.1);
+    }
+  }
+  
+  /* Tablet Styles */
+  @media (min-width: 768px) {
+    .footerContent {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      text-align: left;
+      padding: 2.5rem 0 1.5rem;
+    }
+  
+    .brandSection {
+      align-items: flex-start;
+    }
+  
+    .socialSection {
+      align-items: flex-end;
+    }
+  
+    .socialLinks {
+      gap: 1.25rem;
+    }
+  
+    .socialLink {
+      width: 2.75rem;
+      height: 2.75rem;
+    }
+  
+    .socialIcon {
+      width: 1.375rem;
+      height: 1.375rem;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .footerContainer {
+      padding: 0 2rem;
+    }
+  
+    .footerContent {
+      padding: 3rem 0 2rem;
+    }
+  
+    .socialLinks {
+      gap: 1.5rem;
+    }
+  
+    .socialLink {
+      width: 3rem;
+      height: 3rem;
+    }
+  
+    .socialIcon {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }

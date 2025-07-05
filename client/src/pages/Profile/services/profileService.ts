@@ -19,7 +19,7 @@ export const fetchUserProfile = async (): Promise<UserProfile> => {
 
 export const updateUserBio = async (bio: string): Promise<UserProfile> => {
   const token = localStorage.getItem('token');
-  const response = await fetch('${API_URL}/api/profile', {
+  const response = await fetch(`${API_URL}/api/profile`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',

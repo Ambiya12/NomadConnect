@@ -29,7 +29,7 @@ export const fetchPublicUserProfile = async (userId: string): Promise<PublicUser
 };
 
 export const fetchPublicUserDestinations = async (userId: string): Promise<{ destinations: Destination[]; stats: UserStats }> => {
-  const response = await fetch('${API_URL}/api/destinations');
+  const response = await fetch(`${API_URL}/api/destinations`);
   handleFetchError(response, '', 'Failed to fetch destinations');
 
   const allDestinations = await response.json();
