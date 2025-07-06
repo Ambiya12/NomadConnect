@@ -5,40 +5,50 @@ import { useAuth } from '../../pages/Login/hooks/AuthContext';
 import ProfileMenu from '../ProfileMenu';
 import styles from './Header.module.css';
 
+const navItems = [
+  { label: 'Destinations', path: '/destinations' },
+  { label: 'Travel Tips', path: '/travel-tips' },
+  { label: 'About Us', path: '/about' },
+];
+
 const Header: React.FC = () => {
   const location = useLocation();
   const { isAuthenticated, isLoading } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const isActive = (path: string) => {
-    return location.pathname === path;
-  };
+  const isActive = (path: string) => location.pathname === path;
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
+  const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
-  const closeMobileMenu = () => {
-    setIsMobileMenuOpen(false);
-  };
-
-  // Close mobile menu when route changes
   useEffect(() => {
-    setIsMobileMenuOpen(false);
+    closeMobileMenu();
   }, [location.pathname]);
 
-  // Prevent body scroll when mobile menu is open
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-
+    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : 'unset';
     return () => {
       document.body.style.overflow = 'unset';
     };
   }, [isMobileMenuOpen]);
+
+  const renderNavLinks = (type: 'desktop' | 'sidebar') =>
+    navItems.map(({ label, path }) => {
+      const activeClass =
+        type === 'desktop' ? styles.navLinkActive : styles.sidebarLinkActive;
+      const baseClass = type === 'desktop' ? styles.navLink : styles.sidebarLink;
+
+      return (
+        <Link
+          key={path}
+          to={path}
+          onClick={type === 'sidebar' ? closeMobileMenu : undefined}
+          className={`${baseClass} ${isActive(path) ? activeClass : ''}`}
+        >
+          {label}
+        </Link>
+      );
+    });
 
   return (
     <>
@@ -52,44 +62,19 @@ const Header: React.FC = () => {
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className={styles.desktopNav}>
-            <Link
-              to="/destinations"
-              className={`${styles.navLink} ${
-                isActive("/destinations") ? styles.navLinkActive : ""
-              }`}
-            >
-              Destinations
-            </Link>
-            <Link
-              to="/travel-tips"
-              className={`${styles.navLink} ${
-                isActive("/travel-tips") ? styles.navLinkActive : ""
-              }`}
-            >
-              Travel Tips
-            </Link>
-            <Link
-              to="/about"
-              className={`${styles.navLink} ${
-                isActive("/about") ? styles.navLinkActive : ""
-              }`}
-            >
-              About Us
-            </Link>
-
-            {!isLoading &&
-              (isAuthenticated ? (
+            {renderNavLinks('desktop')}
+            {!isLoading && (
+              isAuthenticated ? (
                 <ProfileMenu />
               ) : (
                 <Link to="/login" className={styles.loginButton}>
                   Login
                 </Link>
-              ))}
+              )
+            )}
           </nav>
 
-          {/* Mobile Menu Button */}
           <button
             className={styles.mobileMenuButton}
             onClick={toggleMobileMenu}
@@ -100,12 +85,10 @@ const Header: React.FC = () => {
         </div>
       </header>
 
-      {/* Mobile Sidebar Overlay */}
       {isMobileMenuOpen && (
         <div className={styles.mobileOverlay} onClick={closeMobileMenu} />
       )}
 
-      {/* Mobile Sidebar */}
       <aside className={`${styles.mobileSidebar} ${isMobileMenuOpen ? styles.sidebarOpen : ''}`}>
         <div className={styles.sidebarContent}>
           <div className={styles.sidebarHeader}>
@@ -119,50 +102,21 @@ const Header: React.FC = () => {
           </div>
 
           <nav className={styles.sidebarNav}>
-            <Link
-              to="/destinations"
-              className={`${styles.sidebarLink} ${
-                isActive("/destinations") ? styles.sidebarLinkActive : ""
-              }`}
-              onClick={closeMobileMenu}
-            >
-              Destinations
-            </Link>
-            <Link
-              to="/travel-tips"
-              className={`${styles.sidebarLink} ${
-                isActive("/travel-tips") ? styles.sidebarLinkActive : ""
-              }`}
-              onClick={closeMobileMenu}
-            >
-              Travel Tips
-            </Link>
-            <Link
-              to="/about"
-              className={`${styles.sidebarLink} ${
-                isActive("/about") ? styles.sidebarLinkActive : ""
-              }`}
-              onClick={closeMobileMenu}
-            >
-              About Us
-            </Link>
+            {renderNavLinks('sidebar')}
           </nav>
 
           <div className={styles.sidebarAuth}>
-            {!isLoading &&
-              (isAuthenticated ? (
+            {!isLoading && (
+              isAuthenticated ? (
                 <div className={styles.profileMenuWrapper}>
                   <ProfileMenu />
                 </div>
               ) : (
-                <Link 
-                  to="/login" 
-                  className={styles.sidebarLoginButton}
-                  onClick={closeMobileMenu}
-                >
+                <Link to="/login" className={styles.sidebarLoginButton} onClick={closeMobileMenu}>
                   Login
                 </Link>
-              ))}
+              )
+            )}
           </div>
         </div>
       </aside>

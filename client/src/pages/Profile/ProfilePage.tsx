@@ -64,7 +64,6 @@ const ProfilePage: React.FC = () => {
         <ProfileHeader 
           userProfile={userProfile} 
           stats={stats}
-          user={user} 
         />
 
         <div className={styles.destinationsSection}>

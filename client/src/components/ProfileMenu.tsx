@@ -10,28 +10,25 @@ const ProfileMenu: React.FC = () => {
   const navigate = useNavigate();
   const menuRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
+  const toggleDropdown = () => setIsOpen((prev) => !prev);
 
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+  const handleClickOutside = (e: MouseEvent) => {
+    if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+      setIsOpen(false);
     }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+  };
+
+  useEffect(() => {
+    if (isOpen) document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen]);
 
   const handleSignOut = async () => {
     try {
       await logout();
-      setIsOpen(false);
-      navigate('/');
-    } catch (error) {
-      console.error('Logout failed:', error);
+    } catch (err) {
+      console.error('Logout failed:', err);
+    } finally {
       setIsOpen(false);
       navigate('/');
     }
@@ -42,49 +39,34 @@ const ProfileMenu: React.FC = () => {
     navigate('/profile');
   };
 
-  const getInitials = () => {
-    if (!user) return 'U';
-    return `${user.first_name.charAt(0)}${user.last_name.charAt(0)}`.toUpperCase();
-  };
+  const getInitials = () =>
+    user ? `${user.first_name[0]}${user.last_name[0]}`.toUpperCase() : 'U';
 
   if (!user) return null;
 
   return (
-    <div 
-      className={styles.profileMenu} 
-      ref={menuRef}
-      onClick={(e) => e.stopPropagation()}
-    >
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={styles.profileButton}
-      >
-        <div className={styles.avatar}>
-          {getInitials()}
-        </div>
-        <span className={styles.userName}>
-          {user.first_name}
-        </span>
-        <ExpandMore className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ''}`} />
+    <div className={styles.profileMenu} ref={menuRef}>
+      <button onClick={toggleDropdown} className={styles.profileButton}>
+        <div className={styles.avatar}>{getInitials()}</div>
+        <span className={styles.userName}>{user.first_name}</span>
+        <ExpandMore
+          className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ''}`}
+        />
       </button>
 
       {isOpen && (
         <div className={styles.dropdown}>
           <div className={styles.userInfo}>
-            <div className={styles.avatarLarge}>
-              {getInitials()}
-            </div>
+            <div className={styles.avatarLarge}>{getInitials()}</div>
             <div className={styles.userDetails}>
               <p className={styles.fullName}>
                 {user.first_name} {user.last_name}
               </p>
-              <p className={styles.email}>
-                {user.email}
-              </p>
+              <p className={styles.email}>{user.email}</p>
             </div>
           </div>
 
-          <div className={styles.divider}></div>
+          <div className={styles.divider} />
 
           <div className={styles.menuItems}>
             <button className={styles.menuItem} onClick={handleProfileClick}>
@@ -92,9 +74,9 @@ const ProfileMenu: React.FC = () => {
               <span>Profile</span>
             </button>
 
-            <div className={styles.divider}></div>
+            <div className={styles.divider} />
 
-            <button 
+            <button
               className={`${styles.menuItem} ${styles.signOutItem}`}
               onClick={handleSignOut}
             >
