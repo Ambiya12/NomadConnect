@@ -59,8 +59,9 @@
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   min-width: 16rem;
   z-index: 50;
-  /* Prevent event bubbling that could close mobile menu */
   pointer-events: auto;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .userInfo {
