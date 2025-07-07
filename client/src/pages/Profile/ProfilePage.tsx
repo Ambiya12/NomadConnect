@@ -6,24 +6,22 @@ import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
 import ProfileHeader from '../../components/Profile/ProfileHeader';
 import DestinationsGrid from '../../components/Profile/DestinationsGrid';
 import { useProfile } from './hooks/useProfile';
-
-import styles from './ProfilePage.module.css';
 import { useUserDestinations } from './hooks/useUserProfile';
-
+import styles from './Profile.module.css';
 
 const ProfilePage: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   const { userProfile, loading: profileLoading, error: profileError } = useProfile();
-  const { 
-    destinations, 
-    stats, 
-    loading: destinationsLoading, 
-    error: destinationsError, 
+  const {
+    destinations,
+    stats,
+    loading: destinationsLoading,
+    error: destinationsError,
     deleteLoading,
-    handleDeleteDestination 
+    handleDeleteDestination,
   } = useUserDestinations();
 
   useEffect(() => {
@@ -33,16 +31,10 @@ const ProfilePage: React.FC = () => {
     }
   }, [location.state]);
 
-  const handleEditDestination = (destinationId: string) => {
-    navigate(`/edit-destination/${destinationId}`);
-  };
-
   const loading = profileLoading || destinationsLoading;
   const error = profileError || destinationsError;
 
-  if (loading) {
-    return <LoadingSpinner message="Loading your profile..." />;
-  }
+  if (loading) return <LoadingSpinner message="Loading your profile..." />;
 
   if (error) {
     return (
@@ -54,30 +46,22 @@ const ProfilePage: React.FC = () => {
     );
   }
 
-  if (!user || !userProfile) {
-    return null;
-  }
+  if (!user || !userProfile) return null;
 
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        <ProfileHeader 
-          userProfile={userProfile} 
-          stats={stats}
-        />
+        <ProfileHeader userProfile={userProfile} stats={stats} />
 
-        <div className={styles.destinationsSection}>
-          <div className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle}>Destinations</h2>
-          </div>
-          
+        <section className={styles.section}>
+          <h2 className={styles.title}>Destinations</h2>
           <DestinationsGrid
             destinations={destinations}
             deleteLoading={deleteLoading}
-            onEdit={handleEditDestination}
+            onEdit={(id) => navigate(`/edit-destination/${id}`)}
             onDelete={handleDeleteDestination}
           />
-        </div>
+        </section>
       </div>
     </div>
   );

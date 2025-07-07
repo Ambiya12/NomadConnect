@@ -1,0 +1,52 @@
+.container {
+  min-height: 100vh;
+  background: white;
+}
+
+.content {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.section {
+  margin-top: 2rem;
+}
+
+.title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #8e8e8e;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #374151;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  margin: 1rem;
+  cursor: pointer;
+}
+
+.icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 1rem;
+  }
+
+  .backButton {
+    margin: 1rem 0.5rem;
+  }
+}
