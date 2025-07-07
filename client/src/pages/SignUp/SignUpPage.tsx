@@ -1,51 +1,57 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Visibility, VisibilityOff, CloudUpload, Person } from '@mui/icons-material';
-
-import styles from './SignUpPage.module.css';
-import { registerUser } from './service/signUpService';
+import React, { useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Visibility, VisibilityOff, CloudUpload, Person } from "@mui/icons-material";
+import { registerUser } from "./service/signUpService";
+import styles from "./SignUpPage.module.css";
 
 const SignUpPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [profilePicturePreview, setProfilePicturePreview] = useState<string | null>(null);
+  const [error, setError] = useState("");
+  const [profilePicturePreview, setProfilePicturePreview] = useState<
+    string | null
+  >(null);
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    bio: '',
-    profilePicture: null as File | null
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    bio: "",
+    profilePicture: null as File | null,
   });
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
-    if (error) setError('');
+    if (error) setError("");
   };
 
-  const handleProfilePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleProfilePictureChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (!file.type.startsWith('image/')) {
-        setError('Please select a valid image file');
+      if (!file.type.startsWith("image/")) {
+        setError("Please select a valid image file");
         return;
       }
-      
+
       if (file.size > 5 * 1024 * 1024) {
-        setError('Profile picture must be less than 5MB');
+        setError("Profile picture must be less than 5MB");
         return;
       }
 
       setFormData({
         ...formData,
-        profilePicture: file
+        profilePicture: file,
       });
 
       const reader = new FileReader();
@@ -59,23 +65,25 @@ const SignUpPage: React.FC = () => {
   const removeProfilePicture = () => {
     setFormData({
       ...formData,
-      profilePicture: null
+      profilePicture: null,
     });
     setProfilePicturePreview(null);
-    
-    const fileInput = document.getElementById('profilePicture') as HTMLInputElement;
+
+    const fileInput = document.getElementById(
+      "profilePicture"
+    ) as HTMLInputElement;
     if (fileInput) {
-      fileInput.value = '';
+      fileInput.value = "";
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError('');
+    setError("");
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       setIsLoading(false);
       return;
     }
@@ -89,22 +97,26 @@ const SignUpPage: React.FC = () => {
         formData.bio,
         formData.profilePicture
       );
-      
-      console.log('Registration successful:', response);
+
+      console.log("Registration successful:", response);
 
       if (response.accessToken) {
-        localStorage.setItem('token', response.accessToken);
+        localStorage.setItem("token", response.accessToken);
       }
       if (response.refreshToken) {
-        localStorage.setItem('refreshToken', response.refreshToken);
+        localStorage.setItem("refreshToken", response.refreshToken);
       }
-      
-      navigate('/login', { 
-        state: { message: 'Account created successfully! Please log in.' }
+
+      const from = location.state?.from;
+      navigate("/login", {
+        state: {
+          message: "Account created successfully! Please log in.",
+          from: from,
+        },
       });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err : any) {
-      setError(err.message || 'Registration failed. Please try again.');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      setError(err.message || "Registration failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -118,7 +130,8 @@ const SignUpPage: React.FC = () => {
             Start your journey with fellow explorers
           </h1>
           <p className={styles.leftDescription}>
-            Share your travel stories, discover hidden gems, and connect with a community that values authentic experiences over tourist traps.
+            Share your travel stories, discover hidden gems, and connect with a
+            community that values authentic experiences over tourist traps.
           </p>
           <ul className={styles.featureList}>
             <li className={styles.featureItem}>
@@ -140,9 +153,7 @@ const SignUpPage: React.FC = () => {
       <div className={styles.rightSide}>
         <div className={styles.formContainer}>
           <div className={styles.mobileHeader}>
-            <h1 className={styles.mobileTitle}>
-              Join Nomad Connect
-            </h1>
+            <h1 className={styles.mobileTitle}>Join Nomad Connect</h1>
             <p className={styles.mobileSubtitle}>
               Create your account and start exploring
             </p>
@@ -153,21 +164,19 @@ const SignUpPage: React.FC = () => {
             <p className={styles.desktopSubtitle}>Create your nomad account</p>
           </div>
 
-          {error && (
-            <div className={styles.errorMessage}>
-              {error}
-            </div>
-          )}
+          {error && <div className={styles.errorMessage}>{error}</div>}
 
           <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.profilePictureSection}>
-              <label className={styles.profilePictureLabel}>Profile Picture (Optional)</label>
+              <label className={styles.profilePictureLabel}>
+                Profile Picture (Optional)
+              </label>
               <div className={styles.profilePictureContainer}>
                 {profilePicturePreview ? (
                   <div className={styles.profilePicturePreview}>
-                    <img 
-                      src={profilePicturePreview} 
-                      alt="Profile preview" 
+                    <img
+                      src={profilePicturePreview}
+                      alt="Profile preview"
                       className={styles.previewImage}
                     />
                     <button
@@ -184,7 +193,7 @@ const SignUpPage: React.FC = () => {
                     <Person className={styles.placeholderIcon} />
                   </div>
                 )}
-                
+
                 <div className={styles.uploadButtonContainer}>
                   <input
                     type="file"
@@ -194,9 +203,12 @@ const SignUpPage: React.FC = () => {
                     className={styles.fileInput}
                     disabled={isLoading}
                   />
-                  <label htmlFor="profilePicture" className={styles.uploadButton}>
+                  <label
+                    htmlFor="profilePicture"
+                    className={styles.uploadButton}
+                  >
                     <CloudUpload className={styles.uploadIcon} />
-                    {profilePicturePreview ? 'Change Photo' : 'Upload Photo'}
+                    {profilePicturePreview ? "Change Photo" : "Upload Photo"}
                   </label>
                 </div>
               </div>
@@ -260,7 +272,7 @@ const SignUpPage: React.FC = () => {
 
             <div className={styles.inputGroup}>
               <input
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 name="password"
                 placeholder="Password"
                 value={formData.password}
@@ -281,7 +293,7 @@ const SignUpPage: React.FC = () => {
 
             <div className={styles.inputGroup}>
               <input
-                type={showConfirmPassword ? 'text' : 'password'}
+                type={showConfirmPassword ? "text" : "password"}
                 name="confirmPassword"
                 placeholder="Confirm Password"
                 value={formData.confirmPassword}
@@ -305,17 +317,14 @@ const SignUpPage: React.FC = () => {
               className={styles.submitButton}
               disabled={isLoading}
             >
-              {isLoading ? 'Creating Account...' : 'Create Account'}
+              {isLoading ? "Creating Account..." : "Create Account"}
             </button>
           </form>
 
           <div className={styles.loginPrompt}>
             <p className={styles.loginText}>
-              Already have an account?{' '}
-              <Link 
-                to="/login" 
-                className={styles.loginLink}
-              >
+              Already have an account?{" "}
+              <Link to="/login" className={styles.loginLink}>
                 Log in
               </Link>
             </p>
