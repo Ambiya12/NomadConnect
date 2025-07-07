@@ -7,6 +7,8 @@ import DestinationPage from './pages/Destination/DestinationPage';
 import DestinationDetailPage from './pages/Destination/DestinationDetail/DestinationDetailPage';
 import CreateDestinationPage from './pages/Destination/createDestination/CreateDestination';
 import TravelTipsPage from './pages/TravelTips/TravelTipsPage';
+import TravelTipDetailPage from './pages/TravelTips/TravelTipDetail/TravelTipDetail';
+import EditTravelTipPage from './pages/TravelTips/EditTravelTip/EditTravelTipPage';
 import AboutUsPage from './pages/AboutUs/AboutUsPage';
 import ProfilePage from './pages/Profile/ProfilePage';
 import EditDestinationPage from './pages/Destination/EditDestination/EditDestination';
@@ -25,6 +27,8 @@ function App() {
           <Route path="/create-destination" element={<CreateDestinationPage/>} />
           <Route path="/edit-destination/:id" element={<EditDestinationPage />} />
           <Route path="/travel-tips" element={<TravelTipsPage />} />
+          <Route path="/travel-tips/:id" element={<TravelTipDetailPage />} />
+          <Route path="/travel-tips/:id/edit" element={<EditTravelTipPage />} />
           <Route path="/about" element={<AboutUsPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/profile/:userId" element={<PublicProfilePage />} />

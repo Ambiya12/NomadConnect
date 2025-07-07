@@ -1,9 +1,8 @@
-const API_URL = import.meta.env.VITE_API_URL;
-
 export const submitComment = async (
   destinationId: string,
   comment: string
 ): Promise<boolean> => {
+  const API_URL = import.meta.env.VITE_API_URL;
   const token = localStorage.getItem("token");
   try {
     const response = await fetch(

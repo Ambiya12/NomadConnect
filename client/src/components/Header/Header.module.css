@@ -49,8 +49,6 @@
   font-weight: bold;
   color: #292524;
 }
-
-/* Desktop Navigation */
 .desktopNav {
   display: none;
   align-items: center;
@@ -88,7 +86,7 @@
 }
 
 .loginButton {
-  background: linear-gradient(135deg, #a8a29e, #78716c);
+  background: #78716c;
   color: white;
   padding: 0.5rem 1.5rem;
   border-radius: 25px;
@@ -97,16 +95,9 @@
   transition: all 0.3s ease;
   border: none;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(168, 162, 158, 0.3);
+
 }
 
-.loginButton:hover {
-  background: linear-gradient(135deg, #78716c, #57534e);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(168, 162, 158, 0.4);
-}
-
-/* Mobile Menu Button */
 .mobileMenuButton {
   display: flex;
   align-items: center;
@@ -125,7 +116,6 @@
   background: rgba(0, 0, 0, 0.05);
 }
 
-/* Mobile Sidebar */
 .mobileOverlay {
   position: fixed;
   top: 0;
@@ -216,7 +206,6 @@
 }
 
 .profileMenuWrapper {
-  /* Ensure profile menu doesn't close sidebar when clicked */
   position: relative;
 }
 
@@ -239,7 +228,6 @@
   transform: translateY(-1px);
 }
 
-/* Tablet Styles (768px - 1023px) */
 @media (min-width: 768px) {
   .headerContainer {
     padding: 1rem 1.5rem;
@@ -284,7 +272,6 @@
   }
 }
 
-/* Large Desktop Styles (1280px+) */
 @media (min-width: 1280px) {
   .desktopNav {
     gap: 3rem;
