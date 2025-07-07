@@ -48,7 +48,7 @@ const HomePage: React.FC = () => (
   <div>
     <section className={styles.hero}>
       <img
-        src="/images/worldTourLines.webp"
+        src="/images/worldTourLine.webp"
         alt="World landmarks illustration"
         className={styles.heroImage}
         loading="lazy"
