@@ -5,13 +5,6 @@ import { registerUser } from "./service/signUpService";
 import styles from "./SignUpPage.module.css";
 
 const SignUpPage: React.FC = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [profilePicturePreview, setProfilePicturePreview] = useState<
-    string | null
-  >(null);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -21,75 +14,57 @@ const SignUpPage: React.FC = () => {
     bio: "",
     profilePicture: null as File | null,
   });
+
+  const [preview, setPreview] = useState<string | null>(null);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleInputChange = (
+  const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
     if (error) setError("");
   };
 
-  const handleProfilePictureChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      if (!file.type.startsWith("image/")) {
-        setError("Please select a valid image file");
-        return;
-      }
+    if (!file) return;
+    if (!file.type.startsWith("image/")) return setError("Invalid image file.");
+    if (file.size > 5 * 1024 * 1024) return setError("Max size is 5MB.");
 
-      if (file.size > 5 * 1024 * 1024) {
-        setError("Profile picture must be less than 5MB");
-        return;
-      }
+    setFormData((prev) => ({ ...prev, profilePicture: file }));
 
-      setFormData({
-        ...formData,
-        profilePicture: file,
-      });
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setProfilePicturePreview(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
+    const reader = new FileReader();
+    reader.onload = (e) => setPreview(e.target?.result as string);
+    reader.readAsDataURL(file);
   };
 
-  const removeProfilePicture = () => {
-    setFormData({
-      ...formData,
-      profilePicture: null,
-    });
-    setProfilePicturePreview(null);
-
-    const fileInput = document.getElementById(
-      "profilePicture"
-    ) as HTMLInputElement;
-    if (fileInput) {
-      fileInput.value = "";
-    }
+  const removePicture = () => {
+    setFormData((prev) => ({ ...prev, profilePicture: null }));
+    setPreview(null);
+    const input = document.getElementById("profilePicture") as HTMLInputElement;
+    if (input) input.value = "";
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    setLoading(true);
     setError("");
 
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
-      setIsLoading(false);
+      setLoading(false);
       return;
     }
 
     try {
-      const response = await registerUser(
+      const res = await registerUser(
         formData.firstName,
         formData.lastName,
         formData.email,
@@ -98,239 +73,132 @@ const SignUpPage: React.FC = () => {
         formData.profilePicture
       );
 
-      console.log("Registration successful:", response);
+      localStorage.setItem("token", res.accessToken || "");
+      localStorage.setItem("refreshToken", res.refreshToken || "");
 
-      if (response.accessToken) {
-        localStorage.setItem("token", response.accessToken);
-      }
-      if (response.refreshToken) {
-        localStorage.setItem("refreshToken", response.refreshToken);
-      }
-
-      const from = location.state?.from;
       navigate("/login", {
         state: {
           message: "Account created successfully! Please log in.",
-          from: from,
+          from: location.state?.from,
         },
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      setError(err.message || "Registration failed. Please try again.");
+      setError(err.message || "Registration failed.");
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   return (
     <div className={styles.container}>
-      <div className={styles.leftSide}>
-        <div className={styles.leftContent}>
-          <h1 className={styles.leftTitle}>
-            Start your journey with fellow explorers
-          </h1>
-          <p className={styles.leftDescription}>
-            Share your travel stories, discover hidden gems, and connect with a
-            community that values authentic experiences over tourist traps.
-          </p>
-          <ul className={styles.featureList}>
-            <li className={styles.featureItem}>
-              <span className={styles.featureDot}></span>
-              Share your hidden discoveries
-            </li>
-            <li className={styles.featureItem}>
-              <span className={styles.featureDot}></span>
-              Get local insider tips
-            </li>
-            <li className={styles.featureItem}>
-              <span className={styles.featureDot}></span>
-              Connect with like-minded travelers
-            </li>
-          </ul>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <h2>Sign Up</h2>
+        {error && <div className={styles.error}>{error}</div>}
+
+        <div className={styles.field}>
+          <label>Profile Picture (Optional)</label>
+          <div className={styles.pictureWrapper}>
+            {preview ? (
+              <>
+                <img src={preview} alt="Preview" className={styles.preview} />
+                <button type="button" onClick={removePicture} disabled={loading}>×</button>
+              </>
+            ) : (
+              <div className={styles.placeholder}><Person /></div>
+            )}
+          </div>
+          <input
+            type="file"
+            id="profilePicture"
+            accept="image/*"
+            onChange={handleFileChange}
+            hidden
+            disabled={loading}
+          />
+          <label htmlFor="profilePicture" className={styles.upload}>
+            <CloudUpload />
+            {preview ? "Change Photo" : "Upload Photo"}
+          </label>
         </div>
-      </div>
 
-      <div className={styles.rightSide}>
-        <div className={styles.formContainer}>
-          <div className={styles.mobileHeader}>
-            <h1 className={styles.mobileTitle}>Join Nomad Connect</h1>
-            <p className={styles.mobileSubtitle}>
-              Create your account and start exploring
-            </p>
-          </div>
-
-          <div className={styles.desktopHeader}>
-            <h2 className={styles.desktopTitle}>Sign Up</h2>
-            <p className={styles.desktopSubtitle}>Create your nomad account</p>
-          </div>
-
-          {error && <div className={styles.errorMessage}>{error}</div>}
-
-          <form onSubmit={handleSubmit} className={styles.form}>
-            <div className={styles.profilePictureSection}>
-              <label className={styles.profilePictureLabel}>
-                Profile Picture (Optional)
-              </label>
-              <div className={styles.profilePictureContainer}>
-                {profilePicturePreview ? (
-                  <div className={styles.profilePicturePreview}>
-                    <img
-                      src={profilePicturePreview}
-                      alt="Profile preview"
-                      className={styles.previewImage}
-                    />
-                    <button
-                      type="button"
-                      onClick={removeProfilePicture}
-                      className={styles.removeButton}
-                      disabled={isLoading}
-                    >
-                      ×
-                    </button>
-                  </div>
-                ) : (
-                  <div className={styles.profilePicturePlaceholder}>
-                    <Person className={styles.placeholderIcon} />
-                  </div>
-                )}
-
-                <div className={styles.uploadButtonContainer}>
-                  <input
-                    type="file"
-                    id="profilePicture"
-                    accept="image/*"
-                    onChange={handleProfilePictureChange}
-                    className={styles.fileInput}
-                    disabled={isLoading}
-                  />
-                  <label
-                    htmlFor="profilePicture"
-                    className={styles.uploadButton}
-                  >
-                    <CloudUpload className={styles.uploadIcon} />
-                    {profilePicturePreview ? "Change Photo" : "Upload Photo"}
-                  </label>
-                </div>
-              </div>
-              <p className={styles.uploadHint}>
-                JPG, PNG or GIF. Max size 5MB.
-              </p>
-            </div>
-
-            <div className={styles.nameRow}>
-              <div className={styles.nameField}>
-                <input
-                  type="text"
-                  name="firstName"
-                  placeholder="First Name"
-                  value={formData.firstName}
-                  onChange={handleInputChange}
-                  className={styles.input}
-                  required
-                  disabled={isLoading}
-                />
-              </div>
-
-              <div className={styles.nameField}>
-                <input
-                  type="text"
-                  name="lastName"
-                  placeholder="Last Name"
-                  value={formData.lastName}
-                  onChange={handleInputChange}
-                  className={styles.input}
-                  required
-                  disabled={isLoading}
-                />
-              </div>
-            </div>
-
-            <div>
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className={styles.input}
-                required
-                disabled={isLoading}
-              />
-            </div>
-
-            <div>
-              <textarea
-                name="bio"
-                placeholder="Tell us about yourself (optional)"
-                value={formData.bio}
-                onChange={handleInputChange}
-                className={styles.bioTextarea}
-                rows={3}
-                disabled={isLoading}
-              />
-            </div>
-
-            <div className={styles.inputGroup}>
-              <input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                placeholder="Password"
-                value={formData.password}
-                onChange={handleInputChange}
-                className={`${styles.input} ${styles.passwordInput}`}
-                required
-                disabled={isLoading}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className={styles.passwordToggle}
-                disabled={isLoading}
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </button>
-            </div>
-
-            <div className={styles.inputGroup}>
-              <input
-                type={showConfirmPassword ? "text" : "password"}
-                name="confirmPassword"
-                placeholder="Confirm Password"
-                value={formData.confirmPassword}
-                onChange={handleInputChange}
-                className={`${styles.input} ${styles.passwordInput}`}
-                required
-                disabled={isLoading}
-              />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className={styles.passwordToggle}
-                disabled={isLoading}
-              >
-                {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-              </button>
-            </div>
-
-            <button
-              type="submit"
-              className={styles.submitButton}
-              disabled={isLoading}
-            >
-              {isLoading ? "Creating Account..." : "Create Account"}
-            </button>
-          </form>
-
-          <div className={styles.loginPrompt}>
-            <p className={styles.loginText}>
-              Already have an account?{" "}
-              <Link to="/login" className={styles.loginLink}>
-                Log in
-              </Link>
-            </p>
-          </div>
+        <div className={styles.row}>
+          <input
+            type="text"
+            name="firstName"
+            placeholder="First Name"
+            value={formData.firstName}
+            onChange={handleChange}
+            required
+            disabled={loading}
+          />
+          <input
+            type="text"
+            name="lastName"
+            placeholder="Last Name"
+            value={formData.lastName}
+            onChange={handleChange}
+            required
+            disabled={loading}
+          />
         </div>
-      </div>
+
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+          disabled={loading}
+        />
+
+        <textarea
+          name="bio"
+          placeholder="Bio (optional)"
+          value={formData.bio}
+          onChange={handleChange}
+          rows={3}
+          disabled={loading}
+        />
+
+        <div className={styles.password}>
+          <input
+            type={showPassword ? "text" : "password"}
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            disabled={loading}
+          />
+          <button type="button" onClick={() => setShowPassword(!showPassword)} disabled={loading}>
+            {showPassword ? <VisibilityOff /> : <Visibility />}
+          </button>
+        </div>
+
+        <div className={styles.password}>
+          <input
+            type={showConfirm ? "text" : "password"}
+            name="confirmPassword"
+            placeholder="Confirm Password"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            required
+            disabled={loading}
+          />
+          <button type="button" onClick={() => setShowConfirm(!showConfirm)} disabled={loading}>
+            {showConfirm ? <VisibilityOff /> : <Visibility />}
+          </button>
+        </div>
+
+        <button type="submit" disabled={loading}>
+          {loading ? "Creating..." : "Create Account"}
+        </button>
+
+        <div className={styles.login}>
+          Already have an account? <Link to="/login">Log in</Link>
+        </div>
+      </form>
     </div>
   );
 };

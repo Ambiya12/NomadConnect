@@ -2,48 +2,42 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Public, Save, ArrowBack } from "@mui/icons-material";
 import { useAuth } from "../../Login/hooks/AuthContext";
-import {
-  fetchTravelTipById,
-  updateTravelTip,
-} from "../service/travelTipsService";
+import { fetchTravelTipById, updateTravelTip } from "../service/travelTipsService";
 import LoadingSpinner from "../../../components/LoadingSpinner/LoadingSpinner";
 import ErrorMessage from "../../../components/ErrorMessage/ErrorMessage";
-import type {
-  TravelTip,
-  CreateTravelTipPayload,
-} from "../../../types/travelTip";
+import type { TravelTip, CreateTravelTipPayload } from "../../../types/travelTip";
 import styles from "./EditTravelTipPage.module.css";
 
 const EditTravelTipPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [tip, setTip] = useState<TravelTip | null>(null);
+
   const [formData, setFormData] = useState<CreateTravelTipPayload>({
     title: "",
     description: "",
   });
+
+  const [tip, setTip] = useState<TravelTip | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (!isAuthenticated) {
       navigate("/login");
       return;
     }
+
     if (id) {
-      fetchTravelTip();
+      fetchTip();
     }
-  }, [isAuthenticated, navigate, id]);
+  }, [id, isAuthenticated]);
 
-  const fetchTravelTip = async () => {
+  const fetchTip = async () => {
     try {
-      setLoading(true);
       const tipData = await fetchTravelTipById(id!);
-
-      // Check if user owns this tip
-      if (user && tipData.created_by && user.id !== tipData.created_by._id) {
+      if (user?.id !== tipData.created_by?._id) {
         navigate("/travel-tips");
         return;
       }
@@ -60,13 +54,11 @@ const EditTravelTipPage: React.FC = () => {
     }
   };
 
-  const handleInputChange = (
+  const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -78,23 +70,16 @@ const EditTravelTipPage: React.FC = () => {
       navigate(`/travel-tips/${id}`, {
         state: { message: "Travel tip updated successfully!" },
       });
-    } catch (error: any) {
-      console.error("Error updating travel tip:", error);
-      alert(error.message || "Failed to update travel tip. Please try again.");
+    } catch (err: any) {
+      alert(err.message || "Failed to update travel tip.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (!isAuthenticated) {
-    return null;
-  }
-
-  if (loading) {
-    return <LoadingSpinner message="Loading travel tip..." />;
-  }
-
-  if (error || !tip) {
+  if (!isAuthenticated) return null;
+  if (loading) return <LoadingSpinner message="Loading travel tip..." />;
+  if (error || !tip)
     return (
       <ErrorMessage
         title="Travel tip not found"
@@ -102,26 +87,24 @@ const EditTravelTipPage: React.FC = () => {
         onRetry={() => navigate("/travel-tips")}
       />
     );
-  }
 
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        <div className={styles.header}>
+        <header className={styles.header}>
           <button
             onClick={() => navigate(`/travel-tips/${id}`)}
             className={styles.backButton}
           >
-            <ArrowBack className={styles.buttonIcon} />
+            <ArrowBack className={styles.icon} />
             Back to Tip
           </button>
-
           <div className={styles.headerContent}>
             <Public className={styles.headerIcon} />
             <h1 className={styles.title}>Edit Your Travel Tip</h1>
             <p className={styles.subtitle}>Update your travel wisdom</p>
           </div>
-        </div>
+        </header>
 
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.formGroup}>
@@ -129,12 +112,12 @@ const EditTravelTipPage: React.FC = () => {
             <input
               type="text"
               name="title"
-              placeholder="Give your tip a catchy title..."
               value={formData.title}
-              onChange={handleInputChange}
+              onChange={handleChange}
               className={styles.input}
               required
               disabled={isSubmitting}
+              placeholder="Catchy title..."
             />
           </div>
 
@@ -142,25 +125,25 @@ const EditTravelTipPage: React.FC = () => {
             <label className={styles.label}>Description *</label>
             <textarea
               name="description"
-              placeholder="Share your travel wisdom... What did you learn? What would you do differently? What insider tips can you share?"
               value={formData.description}
-              onChange={handleInputChange}
+              onChange={handleChange}
               className={styles.textarea}
-              rows={12}
               required
               disabled={isSubmitting}
+              rows={10}
+              placeholder="Share your travel wisdom..."
             />
             <p className={styles.helpText}>
-              Share detailed insights that will help fellow travelers. The more
-              specific and actionable your advice, the more valuable it will be.
+              Share actionable, specific insights that can truly help other
+              travelers.
             </p>
           </div>
 
           <div className={styles.buttonGroup}>
             <button
               type="button"
-              onClick={() => navigate(`/travel-tips/${id}`)}
               className={styles.cancelButton}
+              onClick={() => navigate(`/travel-tips/${id}`)}
               disabled={isSubmitting}
             >
               Cancel
@@ -172,7 +155,7 @@ const EditTravelTipPage: React.FC = () => {
                 isSubmitting || !formData.title || !formData.description
               }
             >
-              <Save className={styles.buttonIcon} />
+              <Save className={styles.icon} />
               {isSubmitting ? "Updating..." : "Save Changes"}
             </button>
           </div>

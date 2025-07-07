@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Public, CloudUpload } from '@mui/icons-material';
+import { CountryDropdown } from 'react-country-region-selector';
 import { useAuth } from '../../Login/hooks/AuthContext';
 import { getCoordinatesForLocation } from '../service/geocodeService';
-import { CountryDropdown } from 'react-country-region-selector';
 import { createDestination } from '../service/createDestinationService';
 import styles from './CreateDestination.module.css';
 
 const CreateDestinationPage: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -21,186 +22,135 @@ const CreateDestinationPage: React.FC = () => {
     photos: [] as File[]
   });
 
-  React.useEffect(() => {
-    if (!isAuthenticated) {
-      navigate('/login');
-    }
+  useEffect(() => {
+    if (!isAuthenticated) navigate('/login');
   }, [isAuthenticated, navigate]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleCountryChange = (country: string) => {
+    setFormData({ ...formData, country });
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setFormData({
-        ...formData,
-        photos: Array.from(e.target.files)
-      });
+      setFormData({ ...formData, photos: Array.from(e.target.files) });
     }
-  };
-  
-  const handleCountryChange = (country: string) => {
-    setFormData({
-      ...formData,
-      country
-    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-  
+
     try {
-      const coordinates = await getCoordinatesForLocation(formData.country, formData.city, formData.address);
-  
+      const coordinates = await getCoordinatesForLocation(
+        formData.country,
+        formData.city,
+        formData.address
+      );
+
       const location = {
-        type: "Point",
-        coordinates: coordinates,
+        type: 'Point',
+        coordinates
       };
-  
-      const submitData = new FormData();
-      submitData.append("name", formData.name);
-      submitData.append("description", formData.description);
-      submitData.append("country", formData.country);
-      submitData.append("city", formData.city);
-      submitData.append("address", formData.address); 
-      submitData.append("location", JSON.stringify(location));
-  
-      const tagsArray = formData.tags
-        .split(",")
-        .map((tag) => tag.trim())
-        .filter((tag) => tag.length > 0);
-      submitData.append("tags", JSON.stringify(tagsArray));
-  
-      formData.photos.forEach((photo) => {
-        submitData.append("images", photo);
+
+      const tags = formData.tags
+        .split(',')
+        .map(tag => tag.trim())
+        .filter(Boolean);
+
+      const data = new FormData();
+      ['name', 'description', 'country', 'city', 'address'].forEach(key =>
+        data.append(key, (formData as any)[key])
+      );
+      data.append('location', JSON.stringify(location));
+      data.append('tags', JSON.stringify(tags));
+      formData.photos.forEach(photo => data.append('images', photo));
+
+      await createDestination(data);
+      navigate('/destinations', {
+        state: { message: 'Your hidden gem has been submitted successfully!' }
       });
-  
-      const result = await createDestination(submitData);
-  
-      console.log("Destination created successfully:", result);
-  
-      navigate("/destinations", {
-        state: { message: "Your hidden gem has been submitted successfully!" },
-      });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.error("Error submitting destination:", error);
-      alert(error.message || "Failed to submit destination. Please try again.");
+    } catch (err: any) {
+      alert(err.message || 'Submission failed. Try again.');
+      console.error(err);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (!isAuthenticated) {
-    return null; 
-  }
+  if (!isAuthenticated) return null;
 
   return (
-    <div className={styles.container}>
-      <div className={styles.content}>
-        <div className={styles.header}>
-          <Public className={styles.headerIcon} />
-          <h1 className={styles.title}>Contribute Your Hidden Gem</h1>
-          <p className={styles.subtitle}>
-            Share your discovered spot with fellow explorers<br />
-            and make a traveler's day!
-          </p>
-        </div>
+    <div className={styles.page}>
+      <div className={styles.container}>
+        <header className={styles.header}>
+          <Public className={styles.icon} />
+          <h1>Contribute Your Hidden Gem</h1>
+          <p>Share your discovered spot with fellow explorers and make a traveler's day!</p>
+        </header>
 
         <form onSubmit={handleSubmit} className={styles.form}>
-          <div className={styles.formGroup}>
-            <label className={styles.label}>Spot Name *</label>
-            <input
-              type="text"
-              name="name"
-              placeholder="Name of your hidden gem"
-              value={formData.name}
-              onChange={handleInputChange}
-              className={styles.input}
-              required
-              disabled={isSubmitting}
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label className={styles.label}>Country *</label>
-            <div className={styles.selectContainer}>
-              <CountryDropdown
-                value={formData.country}
-                onChange={handleCountryChange}
-                className={styles.select}
+          {[
+            { label: 'Spot Name *', name: 'name', placeholder: 'Name of your hidden gem' },
+            { label: 'City *', name: 'city', placeholder: 'City or area name' },
+            { label: 'Address *', name: 'address', placeholder: 'Full address' }
+          ].map(field => (
+            <div key={field.name} className={styles.group}>
+              <label>{field.label}</label>
+              <input
+                name={field.name}
+                placeholder={field.placeholder}
+                value={(formData as any)[field.name]}
+                onChange={handleChange}
                 disabled={isSubmitting}
+                required
               />
             </div>
-          </div>
+          ))}
 
-          <div className={styles.formGroup}>
-            <label className={styles.label}>City *</label>
-            <input
-              type="text"
-              name="city"
-              placeholder="City or area name"
-              value={formData.city}
-              onChange={handleInputChange}
-              className={styles.input}
-              required
+          <div className={styles.group}>
+            <label>Country *</label>
+            <CountryDropdown
+              value={formData.country}
+              onChange={handleCountryChange}
               disabled={isSubmitting}
+              className={styles.select}
             />
           </div>
 
-          <div className={styles.formGroup}>
-            <label className={styles.label}>Address *</label>
+          <div className={styles.group}>
+            <label>Tags</label>
             <input
-              type="text"
-              name="address"
-              placeholder="Full address"
-              value={formData.address}
-              onChange={handleInputChange}
-              className={styles.input}
-              required
-              disabled={isSubmitting}
-            />
-          </div>
-
-
-          <div className={styles.formGroup}>
-            <label className={styles.label}>Tags</label>
-            <input
-              type="text"
               name="tags"
-              placeholder="beach, hidden, sunset, local (separate with commas)"
+              placeholder="beach, hidden, sunset, local"
               value={formData.tags}
-              onChange={handleInputChange}
-              className={styles.input}
+              onChange={handleChange}
               disabled={isSubmitting}
             />
-            <p style={{ fontSize: '0.875rem', color: '#6b7280', marginTop: '0.5rem' }}>
-              Add tags to help travelers find your spot. Separate multiple tags with commas.
-            </p>
+            <small>Add tags separated by commas to help others find your spot.</small>
           </div>
 
-          <div className={styles.formGroup}>
-            <label className={styles.label}>What Makes This Spot Unique? *</label>
+          <div className={styles.group}>
+            <label>What Makes This Spot Unique? *</label>
             <textarea
               name="description"
-              placeholder="Tell us what makes this place special. What should travelers know? What's the best time to visit? Any insider tips?"
+              placeholder="Why is this place special? Best time to visit? Insider tips?"
               value={formData.description}
-              onChange={handleInputChange}
-              className={styles.textarea}
+              onChange={handleChange}
               rows={6}
-              required
               disabled={isSubmitting}
+              required
             />
           </div>
 
-          <div className={styles.formGroup}>
-            <label className={styles.label}>Upload Photos</label>
-            <div className={styles.uploadContainer}>
+          <div className={styles.group}>
+            <label>Upload Photos</label>
+            <div className={styles.upload}>
               <input
                 type="file"
                 id="photos"
@@ -208,25 +158,19 @@ const CreateDestinationPage: React.FC = () => {
                 multiple
                 accept="image/*"
                 onChange={handleFileChange}
-                className={styles.fileInput}
                 disabled={isSubmitting}
               />
-              <label htmlFor="photos" className={styles.uploadButton}>
-                <CloudUpload className={styles.uploadIcon} />
-                Browse Files
+              <label htmlFor="photos">
+                <CloudUpload /> Browse Files
               </label>
               {formData.photos.length > 0 && (
-                <div className={styles.filePreview}>
-                  <p className={styles.fileCount}>
-                    {formData.photos.length} file{formData.photos.length > 1 ? 's' : ''} selected
-                  </p>
-                  <div className={styles.fileList}>
-                    {formData.photos.map((file, index) => (
-                      <div key={index} className={styles.fileName}>
-                        {file.name}
-                      </div>
+                <div className={styles.preview}>
+                  <p>{formData.photos.length} file(s) selected</p>
+                  <ul>
+                    {formData.photos.map((file, i) => (
+                      <li key={i}>{file.name}</li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
               )}
             </div>
@@ -234,10 +178,16 @@ const CreateDestinationPage: React.FC = () => {
 
           <button
             type="submit"
-            className={styles.submitButton}
-            disabled={isSubmitting || !formData.name || !formData.description || !formData.country || !formData.city}
+            className={styles.submit}
+            disabled={
+              isSubmitting ||
+              !formData.name ||
+              !formData.description ||
+              !formData.country ||
+              !formData.city
+            }
           >
-            {isSubmitting ? 'Submitting Spot...' : 'Submit Spot'}
+            {isSubmitting ? 'Submitting...' : 'Submit Spot'}
           </button>
         </form>
       </div>

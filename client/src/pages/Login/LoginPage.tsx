@@ -9,34 +9,27 @@ const LoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const [formData, setFormData] = useState({ email: "", password: "" });
+
   const navigate = useNavigate();
   const location = useLocation();
   const { login } = useAuth();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
     if (error) setError("");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError("");
 
     try {
-      const response = await loginUser(formData.email, formData.password);
-      login(response.user, response.accessToken, response.refreshToken);
-    
-      const from = location.state?.from || "/destinations";
-      navigate(from, { replace: true });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { user, accessToken, refreshToken } = await loginUser(formData.email, formData.password);
+      login(user, accessToken, refreshToken);
+
+      const redirectTo = location.state?.from || "/destinations";
+      navigate(redirectTo, { replace: true });
     } catch (err: any) {
       setError(err.message || "Login failed. Please try again.");
     } finally {
@@ -46,44 +39,33 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.leftSide}>
-        <div className={styles.leftContent}>
-          <h1 className={styles.leftTitle}>
-            Join the community of explores sharing hidden gems
-          </h1>
-          <p className={styles.leftDescription}>
-            Connect with fellow travelers, discover authentic experiences, and
-            share your own hidden discoveries with explorers around the world.
-          </p>
-        </div>
-      </div>
-      <div className={styles.rightSide}>
-        <div className={styles.formContainer}>
-          <div className={styles.mobileHeader}>
-            <h1 className={styles.mobileTitle}>Welcome Back</h1>
-            <p className={styles.mobileSubtitle}>
-              Sign in to access your nomad community
-            </p>
-          </div>
-          <div className={styles.desktopHeader}>
-            <h2 className={styles.desktopTitle}>Login</h2>
-          </div>
+      <aside className={styles.left}>
+        <h1 className={styles.title}>Join the community of explorers sharing hidden gems</h1>
+        <p className={styles.description}>
+          Connect with fellow travelers, discover authentic experiences, and share your own discoveries.
+        </p>
+      </aside>
 
-          {error && <div className={styles.errorMessage}>{error}</div>}
+      <main className={styles.right}>
+        <div className={styles.card}>
+          <header className={styles.header}>
+            <h2>Welcome Back</h2>
+            <p>Sign in to access your nomad community</p>
+          </header>
+
+          {error && <div className={styles.error}>{error}</div>}
 
           <form onSubmit={handleSubmit} className={styles.form}>
-            <div>
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className={styles.input}
-                required
-                disabled={isLoading}
-              />
-            </div>
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+              disabled={isLoading}
+              required
+              className={styles.input}
+            />
 
             <div className={styles.inputGroup}>
               <input
@@ -91,46 +73,31 @@ const LoginPage: React.FC = () => {
                 name="password"
                 placeholder="Password"
                 value={formData.password}
-                onChange={handleInputChange}
-                className={`${styles.input} ${styles.passwordInput}`}
-                required
+                onChange={handleChange}
                 disabled={isLoading}
+                required
+                className={styles.input}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className={styles.passwordToggle}
                 disabled={isLoading}
+                className={styles.toggle}
               >
                 {showPassword ? <VisibilityOff /> : <Visibility />}
               </button>
             </div>
 
-            <div className={styles.forgotPassword}>
-              <Link to="/forgot-password" className={styles.forgotLink}>
-                Forgot password?
-              </Link>
-            </div>
-
-            <button
-              type="submit"
-              className={styles.submitButton}
-              disabled={isLoading}
-            >
+            <button type="submit" disabled={isLoading} className={styles.submit}>
               {isLoading ? "Logging in..." : "Log in"}
             </button>
           </form>
 
-          <div className={styles.signupPrompt}>
-            <p className={styles.signupText}>
-              Don't have an account?{" "}
-              <Link to="/signup" className={styles.signupLink}>
-                Sign up
-              </Link>
-            </p>
-          </div>
+          <p className={styles.signup}>
+            Don't have an account? <Link to="/signup">Sign up</Link>
+          </p>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

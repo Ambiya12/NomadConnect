@@ -1,141 +1,164 @@
-
-.heroContainer {
+.hero, .highlights, .cta {
   max-width: 1400px;
   margin: 0 auto;
+  padding: 2rem 1rem;
   text-align: center;
 }
 
 .heroImage {
   width: 100%;
-  margin: 0 auto;
   display: block;
-  margin-top: 1rem;
 }
 
 .heroTitle {
   font-size: 2.5rem;
   font-weight: bold;
   color: #1f2937;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin: 1rem 0;
 }
 
-.storiesContainer {
-  max-width: 1400px;
-  margin: 0 auto;
-  margin-top: 3rem;
+.sectionHeader {
   margin-bottom: 3rem;
 }
 
-.storiesGrid {
+.sectionTitle {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1f2937;
+}
+
+.sectionSubtitle {
+  font-size: 1.125rem;
+  color: #6b7280;
+  max-width: 42rem;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.grid {
   display: grid;
-  grid-template-columns: 1fr;
   gap: 2rem;
+  grid-template-columns: 1fr;
 }
 
-.storyCard {
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-.storyCard:hover {
-  transform: translateY(-2px);
-}
-
-.storyImageContainer {
-  margin-bottom: 1rem;
+.card {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border: 1px solid rgba(0,0,0,0.05);
   overflow: hidden;
-  border-radius: 0.5rem;
+  transition: transform 0.3s ease;
+  cursor: pointer;
 }
 
-.storyImage {
-  width: 100%;
+.card:hover {
+  transform: translateY(-6px);
+}
+
+.cardImageWrapper {
+  position: relative;
   height: 12rem;
+  overflow: hidden;
+}
+
+.cardImage {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
 }
 
-.storyCard:hover .storyImage {
+.card:hover .cardImage {
   transform: scale(1.05);
 }
 
-.storyTitle {
+.cardIcon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 3rem;
+  height: 3rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.featureIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #f97316;
+}
+
+.cardContent {
+  padding: 1.25rem;
+}
+
+.cardTitle {
+  font-size: 1.25rem;
   font-weight: 600;
-  font-size: 1.125rem;
   color: #1f2937;
   margin-bottom: 0.5rem;
   transition: color 0.3s ease;
 }
 
-.storyCard:hover .storyTitle {
+.card:hover .cardTitle {
   color: #f97316;
 }
 
-.storyDescription {
+.cardDescription {
+  font-size: 0.95rem;
   color: #6b7280;
-  font-size: 0.875rem;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
-.joinContainer {
-  display: flex;
-  max-width: 64rem;
-  margin: 0 auto;
-  text-align: center;
-  margin-top: 3rem;
-  margin-bottom: 1rem;
-  column-gap: 1.5rem;
-  justify-content: center;
-}
-
-.joinTitle {
+.ctaTitle {
   font-size: 1.875rem;
   font-weight: bold;
   color: #1f2937;
+  margin-bottom: 1rem;
 }
 
-.joinButtons {
+.ctaButtons {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  align-items: center;
   justify-content: center;
 }
 
-.joinButton {
-  background-color: #fbbf24;
-  color: black;
-  padding: 0.5rem 2rem;
-  border-radius: 9999px;
-  font-weight: 400;
-  transition: background-color 0.3s ease;
+.ctaPrimary, .ctaSecondary {
   text-decoration: none;
+  border-radius: 9999px;
+  font-weight: 500;
+  padding: 0.5rem 2rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: none;
   cursor: pointer;
 }
 
-.joinButton:hover {
+.ctaPrimary {
+  background-color: #fbbf24;
+  color: black;
+  transition: background-color 0.3s ease;
+}
+
+.ctaPrimary:hover {
   background-color: #f59e0b;
 }
 
-.exploreButton {
+.ctaSecondary {
+  background: white;
   border: 2px solid #d1d5db;
   color: #374151;
-  padding: 0.5rem 2rem;
-  border-radius: 9999px;
-  font-weight: 400;
   transition: border-color 0.3s ease;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: white;
-  cursor: pointer;
 }
 
-.exploreButton:hover {
+.ctaSecondary:hover {
   border-color: #9ca3af;
 }
 
@@ -146,7 +169,7 @@
 }
 
 @media (min-width: 640px) {
-  .joinButtons {
+  .ctaButtons {
     flex-direction: row;
   }
 }
@@ -155,18 +178,38 @@
   .heroTitle {
     font-size: 3rem;
   }
-  
-  .storiesGrid {
+
+  .sectionTitle {
+    font-size: 2.5rem;
+  }
+
+  .grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
-  .statsGrid {
-    grid-template-columns: repeat(3, 1fr);
+
+  .ctaTitle {
+    font-size: 2.25rem;
   }
 }
 
 @media (min-width: 1024px) {
-  .storiesGrid {
+  .grid {
     grid-template-columns: repeat(4, 1fr);
+  }
+
+  .cardImageWrapper {
+    height: 10rem;
+  }
+
+  .cardContent {
+    padding: 1rem;
+  }
+
+  .cardTitle {
+    font-size: 1.125rem;
+  }
+
+  .cardDescription {
+    font-size: 0.875rem;
   }
 }

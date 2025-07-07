@@ -25,34 +25,17 @@ const DestinationPage: React.FC = () => {
     }
   }, [location.state]);
 
-  const filteredDestinations = filterDestinations(
-    destinations,
-    searchQuery,
-    selectedRegion
-  );
+  const filtered = filterDestinations(destinations, searchQuery, selectedRegion);
 
-  if (loading) {
-    return <LoadingSpinner message="Loading destinations..." />;
-  }
-
-  if (error) {
-    return (
-      <ErrorMessage
-        title="Error loading destinations"
-        message={error}
-        onRetry={refetch}
-      />
-    );
-  }
+  if (loading) return <LoadingSpinner message="Loading destinations..." />;
+  if (error) return <ErrorMessage title="Error loading destinations" message={error} onRetry={refetch} />;
 
   return (
-    <div className={styles.container}>
-      <section className={styles.headerSection}>
-        <div className={styles.headerContainer}>
+    <div className={styles.page}>
+      <section className={styles.header}>
+        <div className={styles.headerContent}>
           <h1 className={styles.title}>Discover hidden gems around</h1>
-          <h2 className={styles.subtitle}>
-            the world shared by real travelers
-          </h2>
+          <h2 className={styles.subtitle}>the world shared by real travelers</h2>
 
           <SearchBar
             searchQuery={searchQuery}
@@ -62,44 +45,35 @@ const DestinationPage: React.FC = () => {
           />
 
           {isAuthenticated && (
-            <div>
-              <Link
-                to="/create-destination"
-                className={styles.addDestinationButton}
-              >
-                <Add className={styles.buttonIcon} />
-                Share Your Hidden Gem
-              </Link>
-            </div>
+            <Link to="/create-destination" className={styles.addButton}>
+              <Add />
+              Share Your Hidden Gem
+            </Link>
           )}
         </div>
       </section>
 
-      <section className={styles.destinationsSection}>
-        <div className={styles.destinationsContainer}>
-          {filteredDestinations.length === 0 ? (
-            <NoResults isAuthenticated={isAuthenticated} />
-          ) : (
-            <>
-              {!isAuthenticated && (
-                <div className={styles.authNotice}>
-                  <p>
-                    <Link to="/login" className={styles.authLink}>Login</Link> or{' '}
-                    <Link to="/signup" className={styles.authLink}>sign up</Link> to view detailed destination information and connect with fellow travelers.
-                  </p>
-                </div>
-              )}
-            <div className={styles.destinationsGrid}>
-              {filteredDestinations.map((destination) => (
-                <DestinationCard
-                  key={destination._id}
-                  destination={destination}
-                />
+      <section className={styles.main}>
+        {filtered.length === 0 ? (
+          <NoResults isAuthenticated={isAuthenticated} />
+        ) : (
+          <>
+            {!isAuthenticated && (
+              <div className={styles.notice}>
+                <p>
+                  <Link to="/login" className={styles.link}>Login</Link> or{" "}
+                  <Link to="/signup" className={styles.link}>sign up</Link> to view details and connect with travelers.
+                </p>
+              </div>
+            )}
+
+            <div className={styles.grid}>
+              {filtered.map((destination) => (
+                <DestinationCard key={destination._id} destination={destination} />
               ))}
             </div>
-            </>
-          )}
-        </div>
+          </>
+        )}
       </section>
     </div>
   );

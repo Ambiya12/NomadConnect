@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowBack, Favorite, FavoriteBorder, Comment, Edit, Delete, Share } from '@mui/icons-material';
 import { useAuth } from '../../Login/hooks/AuthContext';
@@ -7,160 +7,129 @@ import { useTravelTipActions } from '../hooks/useTravelTipActions';
 import LoadingSpinner from '../../../components/LoadingSpinner/LoadingSpinner';
 import ErrorMessage from '../../../components/ErrorMessage/ErrorMessage';
 import CommentSection from '../../../components/CommentSection/CommentSection';
-import type { TravelTip, User } from '../../../types/travelTip';
 import { formatDate } from '../../../utils/destinationUtils';
+import type { TravelTip, User } from '../../../types/travelTip';
 import styles from './TravelTipDetailPage.module.css';
 
 const TravelTipDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
+
   const [tip, setTip] = useState<TravelTip | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [commentUsers, setCommentUsers] = useState<{ [key: string]: User }>({});
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [commentUsers, setCommentUsers] = useState<Record<string, User>>({});
+  const [isDeleting, setDeleting] = useState(false);
 
   const { isLiked, likesCount, handleLike } = useTravelTipActions(
-    tip?._id || '',
-    tip?.likes || []
+    tip?._id ?? '',
+    tip?.likes ?? [],
   );
 
-  useEffect(() => {
-    if (id) {
-      loadTravelTip();
-    }
-  }, [id]);
-
-  const loadTravelTip = async () => {
+  const loadTravelTip = useCallback(async () => {
     if (!id) return;
-
+    setLoading(true);
     try {
-      setLoading(true);
-      const tipData = await fetchTravelTipById(id);
-      setTip(tipData);
-      
-      const userIds = tipData.comments
-        .filter((comment: any) => comment.user && typeof comment.user === 'string')
-        .map((comment: any) => comment.user as string);
+      const data = await fetchTravelTipById(id);
+      setTip(data);
 
-      if (userIds.length > 0) {
-        await fetchCommentUsers(userIds);
-      }
+      const userIds = Array.from(
+        new Set(
+          data.comments
+            .filter(c => typeof c.user === 'string')
+            .map(c => c.user as string),
+        ),
+      );
+      if (userIds.length) fetchCommentUsers(userIds);
     } catch (err: any) {
-      setError(err.message || 'Failed to load travel tip');
+      setError(err.message ?? 'Error loading tip');
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
-  const fetchCommentUsers = async (userIds: string[]) => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) return;
+  const fetchCommentUsers = async (ids: string[]) => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
 
-      const uniqueUserIds = [...new Set(userIds)];
-      const usersMap: { [key: string]: User } = {};
-
-      for (const userId of uniqueUserIds) {
+    const responseMap: Record<string, User> = {};
+    await Promise.all(
+      ids.map(async uid => {
         try {
-          const response = await fetch(`${import.meta.env.VITE_API_URL}/api/profile/${userId}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-
-          if (response.ok) {
-            const userData = await response.json();
-            usersMap[userId] = {
-              _id: userData._id,
-              first_name: userData.first_name,
-              last_name: userData.last_name,
-            };
+          const res = await fetch(
+            `${import.meta.env.VITE_API_URL}/api/profile/${uid}`,
+            { headers: { Authorization: `Bearer ${token}` } },
+          );
+          if (res.ok) {
+            const u = await res.json();
+            responseMap[uid] = { _id: u._id, first_name: u.first_name, last_name: u.last_name };
           }
-        } catch (error) {
-          console.error(`Error fetching user ${userId}:`, error);
+        } catch (e) {
+          console.error('User fetch error', e);
         }
-      }
-
-      setCommentUsers(usersMap);
-    } catch (error) {
-      console.error('Error fetching comment users:', error);
-    }
+      }),
+    );
+    setCommentUsers(responseMap);
   };
+
+  useEffect(() => {
+    void loadTravelTip();
+  }, [loadTravelTip]);
 
   const handleDelete = async () => {
-    if (!tip || !window.confirm('Are you sure you want to delete this travel tip?')) {
-      return;
-    }
-
+    if (!tip || !confirm('Sure to delete?')) return;
+    setDeleting(true);
     try {
-      setIsDeleting(true);
       await deleteTravelTip(tip._id);
       navigate('/travel-tips');
-    } catch (error: any) {
-      alert(error.message || 'Failed to delete travel tip');
+    } catch (err: any) {
+      alert(err.message ?? 'Delete failed');
     } finally {
-      setIsDeleting(false);
+      setDeleting(false);
     }
   };
 
   const handleLikeClick = async () => {
-    if (!isAuthenticated) {
-      navigate('/login');
-      return;
-    }
+    if (!isAuthenticated) return navigate('/login');
     await handleLike();
-    if (tip) {
-      const updatedTip = await fetchTravelTipById(tip._id);
-      setTip(updatedTip);
-    }
+    if (tip) setTip(await fetchTravelTipById(tip._id));
   };
 
   const handleShare = async () => {
-    if (navigator.share) {
-      try {
+    try {
+      if (navigator.share) {
         await navigator.share({
           title: tip?.title,
           text: tip?.description,
           url: window.location.href,
         });
-      } catch (error) {
-        console.log('Error sharing:', error);
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        alert('Copied to clipboard!');
       }
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert('Link copied to clipboard!');
+    } catch (e) {
+      console.error('Share error', e);
     }
   };
 
-  const getAuthorInitials = () => {
-    if (!tip?.created_by) return 'UN';
-    const firstName = tip.created_by.first_name || '';
-    const lastName = tip.created_by.last_name || '';
-    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase() || 'UN';
-  };
+  const initials = tip
+    ? `${tip.created_by.first_name?.[0] ?? ''}${tip.created_by.last_name?.[0] ?? ''}`.toUpperCase()
+    : 'UN';
+  const authorName = tip
+    ? `${tip.created_by.first_name ?? 'Unknown'} ${tip.created_by.last_name ?? 'User'}`
+    : 'Unknown User';
+  const isOwner = user && tip?.created_by?._id === user.id;
 
-  const getAuthorName = () => {
-    if (!tip?.created_by) return 'Unknown User';
-    return `${tip.created_by.first_name || 'Unknown'} ${tip.created_by.last_name || 'User'}`;
-  };
-
-  const isOwner = user && tip?.created_by && user.id === tip.created_by._id;
-
-  if (loading) {
-    return <LoadingSpinner message="Loading travel tip..." />;
-  }
-
+  if (loading) return <LoadingSpinner message="Loading..." />;
   if (error || !tip) {
     return (
       <ErrorMessage
-        title="Travel tip not found"
+        title="Not found"
         message={error}
         onRetry={() => (
-          <Link to="/travel-tips" className={styles.backButton}>
-            <ArrowBack className={styles.buttonIcon} />
-            Back to Travel Tips
+          <Link to="/travel-tips" className={styles.btn}>
+            <ArrowBack /> Back
           </Link>
         )}
       />
@@ -168,39 +137,25 @@ const TravelTipDetailPage: React.FC = () => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.page}>
       <header className={styles.header}>
-        <button
-          onClick={() => navigate('/travel-tips')}
-          className={styles.backButton}
-        >
-          <ArrowBack className={styles.buttonIcon} />
-          Travel Tips
+        <button className={styles.btn} onClick={() => navigate('/travel-tips')}>
+          <ArrowBack /> Tips
         </button>
-        
         <div className={styles.headerActions}>
-          <button onClick={handleShare} className={styles.shareButton}>
-            <Share className={styles.buttonIcon} />
-          </button>
-          
+          <button onClick={handleShare} className={styles.iconBtn}><Share /></button>
           {isOwner && (
             <>
               <button
                 onClick={() => navigate(`/travel-tips/${id}/edit`)}
-                className={styles.editButton}
-              >
-                <Edit className={styles.buttonIcon} />
-              </button>
+                className={styles.iconBtn}
+              ><Edit /></button>
               <button
                 onClick={handleDelete}
-                className={styles.deleteButton}
+                className={styles.iconBtn}
                 disabled={isDeleting}
               >
-                {isDeleting ? (
-                  <div className={styles.spinner} />
-                ) : (
-                  <Delete className={styles.buttonIcon} />
-                )}
+                {isDeleting ? <div className={styles.spinner} /> : <Delete />}
               </button>
             </>
           )}
@@ -208,65 +163,46 @@ const TravelTipDetailPage: React.FC = () => {
       </header>
 
       <article className={styles.article}>
-        <div className={styles.articleHeader}>
-          <span className={styles.category}>Travel Tip</span>
-          <h1 className={styles.title}>{tip.title}</h1>
-          
-          <div className={styles.meta}>
-            <div className={styles.author}>
-              <div className={styles.authorAvatar}>
-                {tip.created_by?.profile_picture ? (
-                  <img 
-                    src={tip.created_by.profile_picture} 
-                    alt="Author" 
-                    className={styles.authorImage}
-                  />
-                ) : (
-                  getAuthorInitials()
-                )}
-              </div>
-              <div className={styles.authorInfo}>
-                <span className={styles.authorName}>{getAuthorName()}</span>
-                <time className={styles.publishDate}>{formatDate(tip.createdAt)}</time>
-              </div>
+        <span className={styles.category}>Travel Tip</span>
+        <h1 className={styles.title}>{tip.title}</h1>
+        <div className={styles.meta}>
+          <div className={styles.author}>
+            <div className={styles.avatar}>{tip.created_by.profile_picture
+              ? <img src={tip.created_by.profile_picture} alt="avatar" />
+              : initials
+            }</div>
+            <div>
+              <div className={styles.authorName}>{authorName}</div>
+              <time className={styles.publishDate}>{formatDate(tip.createdAt)}</time>
             </div>
-            <div className={styles.readTime}>
-              {Math.ceil(tip.description.length / 200)} min read
-            </div>
+          </div>
+          <div className={styles.readTime}>
+            {Math.ceil(tip.description.length / 200)} min read
           </div>
         </div>
 
         <div className={styles.content}>
-          {tip.description.split('\n').map((paragraph, index) => (
-            <p key={index} className={styles.paragraph}>
-              {paragraph}
-            </p>
-          ))}
+          {tip.description.split('\n').map((p, i) => <p key={i}>{p}</p>)}
         </div>
 
         <div className={styles.actions}>
-          <button
-            onClick={handleLikeClick}
-            className={`${styles.likeButton} ${isLiked ? styles.liked : ''}`}
-          >
-            {isLiked ? <Favorite /> : <FavoriteBorder />}
-            <span>{likesCount}</span>
+          <button onClick={handleLikeClick} className={`${styles.likeBtn} ${isLiked ? styles.liked : ''}`}>
+            {isLiked ? <Favorite /> : <FavoriteBorder />} {likesCount}
           </button>
-          
+
           <div className={styles.commentCount}>
-            <Comment className={styles.commentIcon} />
-            <span>{tip.comments.length}</span>
+            <Comment /> {tip.comments.length}
           </div>
         </div>
-      </article>
 
-      <CommentSection
-        destinationId={tip._id}
-        comments={tip.comments}
-        commentUsers={commentUsers}
-        onCommentSubmit={() => loadTravelTip()}
-        type="travel-tip"
-      />
+        <CommentSection
+          destinationId={tip._id}
+          comments={tip.comments}
+          commentUsers={commentUsers}
+          onCommentSubmit={loadTravelTip}
+          type="travel-tip"
+        />
+      </article>
     </div>
   );
 };
