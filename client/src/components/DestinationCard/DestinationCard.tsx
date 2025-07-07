@@ -1,6 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import { ArrowForward, Person, LocationOn } from "@mui/icons-material";
+import { useAuth } from "../../pages/Login/hooks/AuthContext";
 import type { Destination } from "../../types/destination";
 import styles from "./DestinationCard.module.css";
 import { formatDate, getImageUrl } from "../../utils/destinationUtils";
@@ -10,6 +11,17 @@ interface DestinationCardProps {
 }
 
 const DestinationCard: React.FC<DestinationCardProps> = ({ destination }) => {
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  const handleViewClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: `/destination/${destination._id}` } });
+    } else {
+      navigate(`/destination/${destination._id}`);
+    }
+  };
 
   return (
     <div className={styles.destinationCard}>
@@ -82,13 +94,13 @@ const DestinationCard: React.FC<DestinationCardProps> = ({ destination }) => {
             </span>
           </div>
 
-          <Link
-            to={`/destination/${destination._id}`}
+          <button
+            onClick={handleViewClick}
             className={styles.readMoreButton}
           >
-            Read More
+            View
             <ArrowForward className={styles.buttonIcon} />
-          </Link>
+          </button>
         </div>
       </div>
     </div>

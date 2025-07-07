@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Add } from "@mui/icons-material";
 import { useAuth } from "../Login/hooks/AuthContext";
 import { useTravelTips } from "./hooks/useTravelTips";
@@ -79,28 +80,36 @@ const TravelTipsPage: React.FC = () => {
               <p>
                 Be the first to share your travel wisdom with the community!
               </p>
-              {isAuthenticated && (
-                <button
-                  onClick={() => setIsCreateModalOpen(true)}
-                  className={styles.addFirstTipButton}
-                >
-                  <Add className={styles.buttonIcon} />
-                  Share First Tip
-                </button>
-              )}
             </div>
           ) : (
-            <div className={styles.tipsGrid}>
-              {travelTips.map((tip) => (
-                <TravelTipCard
-                  key={tip._id}
-                  tip={tip}
-                  onLikeUpdate={refetch}
-                  onDelete={handleDelete}
-                  onEdit={handleEdit}
-                />
-              ))}
-            </div>
+            <>
+              {!isAuthenticated && (
+                <div className={styles.authNotice}>
+                  <p>
+                    <Link to="/login" className={styles.authLink}>
+                      Login
+                    </Link>{" "}
+                    or{" "}
+                    <Link to="/signup" className={styles.authLink}>
+                      sign up
+                    </Link>{" "}
+                    to view detailed travel tips, like posts, and share your own
+                    travel wisdom with the community.
+                  </p>
+                </div>
+              )}
+              <div className={styles.tipsGrid}>
+                {travelTips.map((tip) => (
+                  <TravelTipCard
+                    key={tip._id}
+                    tip={tip}
+                    onLikeUpdate={refetch}
+                    onDelete={handleDelete}
+                    onEdit={handleEdit}
+                  />
+                ))}
+              </div>
+            </>
           )}
         </div>
       </section>

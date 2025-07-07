@@ -1,20 +1,33 @@
 .destinationCard {
   background: white;
-  border-radius: 0.75rem;
+  border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
+  position: relative;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  height: fit-content;
+}
+
+.destinationCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  border-color: rgba(249, 115, 22, 0.2);
 }
 
 .imageContainer {
   position: relative;
-  height: 16rem;
+  overflow: hidden;
+  height: 200px;
+  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
 }
 
 .destinationImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .destinationCard:hover .destinationImage {
@@ -24,98 +37,254 @@
 .imageOverlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.3);
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.destinationCard:hover .imageOverlay {
+  opacity: 1;
 }
 
 .destinationName {
   position: absolute;
-  bottom: 1rem;
-  left: 1rem;
+  bottom: 12px;
+  left: 16px;
+  right: 16px;
   color: white;
+  z-index: 2;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+
+.destinationCard:hover .destinationName {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .destinationName h3 {
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 1.25rem;
+  font-weight: 600;
   margin: 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  line-height: 1.2;
 }
 
 .cardContent {
-  padding: 1.5rem;
+  padding: 16px;
 }
 
 .locationInfo {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  gap: 6px;
+  margin-bottom: 8px;
 }
 
 .locationIcon {
+  width: 14px;
+  height: 14px;
   color: #f97316;
 }
 
 .locationText {
-  font-size: 0.875rem;
+  font-size: 0.8rem;
+  color: #6b7280;
+  font-weight: 500;
 }
 
 .authorInfo {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  font-size: 0.875rem;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
-.authorIcon {
-  color: #9ca3af;
+.authorAvatar {
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}
+
+.authorDetails {
+  flex: 1;
+  min-width: 0;
 }
 
 .authorText {
+  color: #374151;
   font-weight: 500;
+  font-size: 0.8rem;
+  margin-bottom: 2px;
+}
+
+.publishDate {
+  color: #9ca3af;
+  font-size: 0.7rem;
 }
 
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  gap: 4px;
+  margin-bottom: 12px;
 }
 
 .tag {
-  background-color: #fed7aa;
+  background: #fed7aa;
   color: #c2410c;
-  font-size: 0.75rem;
-  font-weight: 500;
-  padding: 0.25rem 0.5rem;
-  border-radius: 9999px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+  border: 1px solid rgba(194, 65, 12, 0.1);
 }
 
 .description {
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
+  color: #6b7280;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  font-size: 0.85rem;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .cardActions {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid #f3f4f6;
 }
 
 .stats {
   display: flex;
-  gap: 1rem;
-  font-size: 0.875rem;
+  gap: 12px;
+  font-size: 0.75rem;
+}
+
+.likesCount,
+.commentsCount {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.statIcon {
+  width: 12px;
+  height: 12px;
+  color: #9ca3af;
 }
 
 .readMoreButton {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  background-color: #f97316;
+  gap: 4px;
+  background: #f97316;
   color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
+  padding: 6px 12px;
+  border-radius: 6px;
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.readMoreButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.readMoreButton:hover::before {
+  left: 100%;
+}
+
+.readMoreButton:hover {
+  background: #ea580c;
+  transform: translateY(-1px);
+}
+
+.buttonIcon {
+  width: 10px;
+  height: 10px;
+  transition: transform 0.2s ease;
+}
+
+.readMoreButton:hover .buttonIcon {
+  transform: translateX(2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .imageContainer {
+    height: 160px;
+  }
+
+  .cardContent {
+    padding: 12px;
+  }
+
+  .destinationName h3 {
+    font-size: 1.1rem;
+  }
+
+  .cardActions {
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  .readMoreButton {
+    justify-content: center;
+    padding: 8px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .imageContainer {
+    height: 140px;
+  }
+
+  .cardContent {
+    padding: 10px;
+  }
+
+  .destinationName h3 {
+    font-size: 1rem;
+  }
+
+  .tags {
+    gap: 3px;
+  }
+
+  .tag {
+    font-size: 0.6rem;
+    padding: 1px 6px;
+  }
 }

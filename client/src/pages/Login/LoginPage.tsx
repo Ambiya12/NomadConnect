@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useAuth } from "./hooks/AuthContext";
 import { loginUser } from "./service/loginService";
@@ -14,6 +14,7 @@ const LoginPage: React.FC = () => {
     password: "",
   });
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,7 +33,9 @@ const LoginPage: React.FC = () => {
     try {
       const response = await loginUser(formData.email, formData.password);
       login(response.user, response.accessToken, response.refreshToken);
-      navigate("/destinations");
+    
+      const from = location.state?.from || "/destinations";
+      navigate(from, { replace: true });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message || "Login failed. Please try again.");
