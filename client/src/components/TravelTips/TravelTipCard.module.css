@@ -150,51 +150,6 @@
   gap: 1rem;
 }
 
-.stats {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-}
-
-.likeButton {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  background: white;
-  border: 1px solid #e5e7eb;
-  color: #6b7280;
-  cursor: pointer;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.likeButton.liked {
-  background: #fef2f2;
-  border-color: #dc2626;
-  color: #dc2626;
-}
-
-.commentCount {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  color: #6b7280;
-  font-size: 0.875rem;
-  font-weight: 500;
-  padding: 0.5rem 0.75rem;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.375rem;
-}
-
-.commentIcon {
-  width: 1rem;
-  height: 1rem;
-  color: #f97316;
-}
-
 .actionButtons {
   display: flex;
   gap: 0.5rem;

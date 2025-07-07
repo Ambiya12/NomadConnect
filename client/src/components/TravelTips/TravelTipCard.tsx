@@ -1,8 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowForward, Favorite, FavoriteBorder, Comment, Person, Edit, Delete } from '@mui/icons-material';
+import { ArrowForward, Person, Edit, Delete } from '@mui/icons-material';
 import { useAuth } from '../../pages/Login/hooks/AuthContext';
-import { useTravelTipActions } from '../../pages/TravelTips/hooks/useTravelTipActions';
 import type { TravelTip } from '../../types/travelTip';
 import { deleteTravelTip } from '../../pages/TravelTips/service/travelTipsService';
 import { formatDate } from '../../utils/destinationUtils';
@@ -15,10 +14,9 @@ interface TravelTipCardProps {
   onEdit?: (tip: TravelTip) => void;
 }
 
-const TravelTipCard: React.FC<TravelTipCardProps> = ({ tip, onLikeUpdate, onDelete, onEdit }) => {
+const TravelTipCard: React.FC<TravelTipCardProps> = ({ tip, onDelete, onEdit }) => {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
-  const { isLiked, likesCount, handleLike } = useTravelTipActions(tip._id, tip.likes);
   const [isDeleting, setIsDeleting] = React.useState(false);
 
   const getAuthorName = () => {
@@ -27,15 +25,6 @@ const TravelTipCard: React.FC<TravelTipCardProps> = ({ tip, onLikeUpdate, onDele
   };
 
   const isOwner = user && tip.created_by && user.id === tip.created_by._id;
-
-  const handleLikeClick = async () => {
-    if (!isAuthenticated) {
-      navigate('/login');
-      return;
-    }
-    await handleLike();
-    onLikeUpdate?.();
-  };
 
   const handleDelete = async () => {
     if (!window.confirm('Are you sure you want to delete this travel tip?')) {
@@ -118,21 +107,6 @@ const TravelTipCard: React.FC<TravelTipCardProps> = ({ tip, onLikeUpdate, onDele
         </div>
 
         <div className={styles.cardActions}>
-          <div className={styles.stats}>
-            <button 
-              onClick={handleLikeClick}
-              className={`${styles.likeButton} ${isLiked ? styles.liked : ''}`}
-            >
-              {isLiked ? <Favorite /> : <FavoriteBorder />}
-              <span>{likesCount}</span>
-            </button>
-            
-            <div className={styles.commentCount}>
-              <Comment className={styles.commentIcon} />
-              <span>{tip.comments.length}</span>
-            </div>
-          </div>
-
           <div className={styles.actionButtons}>
             <button onClick={handleReadMore} className={styles.readMoreButton}>
               Read More
