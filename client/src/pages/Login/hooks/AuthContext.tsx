@@ -1,28 +1,5 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  type ReactNode,
-} from "react";
-
-interface User {
-  id: string;
-  email: string;
-  first_name: string;
-  last_name: string;
-  profile_picture?: string;
-  bio?: string;
-}
-
-interface AuthContextType {
-  user: User | null;
-  login: (userData: User, accessToken?: string, refreshToken?: string) => void;
-  logout: () => void;
-  updateUser: (userData: Partial<User>) => void;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-}
+import React, { createContext, useContext, useState, useEffect, type ReactNode } from "react";
+import type { User, AuthContextType} from "../../../types/login";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
