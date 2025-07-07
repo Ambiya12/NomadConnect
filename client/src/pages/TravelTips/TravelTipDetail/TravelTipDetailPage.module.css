@@ -170,8 +170,6 @@
   font-size: 0.875rem;
   font-weight: 500;
 }
-
-/* Content */
 .content {
   margin-bottom: 3rem;
 }
@@ -187,7 +185,6 @@
   margin-bottom: 0;
 }
 
-/* Actions */
 .actions {
   display: flex;
   align-items: center;
@@ -240,7 +237,6 @@
   height: 1rem;
 }
 
-/* Mobile Responsive */
 @media (max-width: 768px) {
   .header {
     padding: 1rem;
