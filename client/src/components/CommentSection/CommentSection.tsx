@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../pages/Login/hooks/AuthContext";
 import type { Comment, User } from "../../types/destination";
 import { formatDate } from "../../utils/destinationUtils";
-import { submitComment } from "../../pages/Destination/service/commentApi";
 import styles from "./CommentSection.module.css";
 
 interface CommentSectionProps {
@@ -11,6 +10,7 @@ interface CommentSectionProps {
   comments: Comment[];
   commentUsers: { [key: string]: User };
   onCommentSubmit: () => void;
+  type?: 'destination' | 'travel-tip'; 
 }
 
 const CommentSection: React.FC<CommentSectionProps> = ({
@@ -18,10 +18,35 @@ const CommentSection: React.FC<CommentSectionProps> = ({
   comments,
   commentUsers,
   onCommentSubmit,
+  type = 'destination', 
 }) => {
   const { isAuthenticated } = useAuth();
   const [newComment, setNewComment] = useState("");
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
+
+  const submitComment = async (id: string, comment: string): Promise<boolean> => {
+    const API_URL = import.meta.env.VITE_API_URL;
+    const token = localStorage.getItem("token");
+    
+    const endpoint = type === 'travel-tip' 
+      ? `${API_URL}/api/travel-tips/${id}/comment`
+      : `${API_URL}/api/destinations/${id}/comment`;
+    
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ comment }),
+      });
+      return response.ok;
+    } catch (error) {
+      console.error("Error adding comment:", error);
+      return false;
+    }
+  };
 
   const handleCommentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,6 +92,18 @@ const CommentSection: React.FC<CommentSectionProps> = ({
     return fullName || "Anonymous User";
   };
 
+  const getPlaceholderText = () => {
+    return type === 'travel-tip' 
+      ? "Share your thoughts about this travel tip..."
+      : "Share your thoughts about this destination...";
+  };
+
+  const getLoginPromptText = () => {
+    return type === 'travel-tip'
+      ? "to share your thoughts about this travel tip."
+      : "to share your thoughts about this destination.";
+  };
+
   return (
     <div className={styles.commentsSection}>
       <h2 className={styles.commentsTitle}>Comments ({comments.length})</h2>
@@ -75,7 +112,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
           <textarea
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Share your thoughts about this destination..."
+            placeholder={getPlaceholderText()}
             className={styles.commentInput}
             rows={3}
             disabled={isSubmittingComment}
@@ -94,7 +131,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
             <Link to="/login" className={styles.loginLink}>
               Login
             </Link>{" "}
-            to share your thoughts about this destination.
+            {getLoginPromptText()}
           </p>
         </div>
       )}
