@@ -168,7 +168,6 @@
   margin-top: 0.125rem;
 }
 
-/* Mobile Responsive */
 @media (max-width: 640px) {
   .container {
     padding: 1rem;
