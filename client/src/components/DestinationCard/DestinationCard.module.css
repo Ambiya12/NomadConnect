@@ -10,12 +10,6 @@
   height: fit-content;
 }
 
-.destinationCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-  border-color: rgba(249, 115, 22, 0.2);
-}
-
 .imageContainer {
   position: relative;
   overflow: hidden;
@@ -221,26 +215,12 @@
   transition: left 0.5s;
 }
 
-.readMoreButton:hover::before {
-  left: 100%;
-}
-
-.readMoreButton:hover {
-  background: #ea580c;
-  transform: translateY(-1px);
-}
-
 .buttonIcon {
   width: 10px;
   height: 10px;
   transition: transform 0.2s ease;
 }
 
-.readMoreButton:hover .buttonIcon {
-  transform: translateX(2px);
-}
-
-/* Responsive Design */
 @media (max-width: 768px) {
   .imageContainer {
     height: 160px;

@@ -1,20 +1,21 @@
-.container {
+.page {
   min-height: 100vh;
   background: white;
 }
 
-.headerSection {
+.header {
   background: linear-gradient(to bottom, #dbeafe, white);
-  padding: 2rem 1rem 0 1rem;
+  padding: 2rem 1rem 0;
 }
 
-.headerContainer {
+.headerContent {
   max-width: 64rem;
   margin: 0 auto;
   text-align: center;
 }
 
-.title {
+.title,
+.subtitle {
   font-size: 2.5rem;
   font-weight: bold;
   color: #1f2937;
@@ -22,13 +23,10 @@
 }
 
 .subtitle {
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: #1f2937;
   margin-bottom: 2rem;
 }
 
-.addDestinationButton {
+.addButton {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -37,54 +35,37 @@
   padding: 0.75rem 1.5rem;
   border-radius: 9999px;
   font-weight: 600;
-  transition: all 0.3s ease;
   text-decoration: none;
   border: none;
-  cursor: pointer;
 }
 
-.addDestinationButton:hover {
-  background-color: #f59e0b;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
-}
-
-.destinationsSection {
+.main {
   padding: 2rem 1rem;
-}
-
-.destinationsContainer {
   max-width: 1400px;
   margin: 0 auto;
 }
 
-.authNotice {
-  background: #d6d3d1f2  ;
-  border: 1px solid #7f7168f2 ;
+.notice {
+  background: #d6d3d1f2;
+  border: 1px solid #7f7168f2;
   border-radius: 0.75rem;
   padding: 1rem 1.5rem;
   margin-bottom: 2rem;
   text-align: center;
 }
 
-.authNotice p {
-  font-weight: 500;
+.notice p {
   margin: 0;
+  font-weight: 500;
 }
 
-.authLink {
+.link {
   color: #f97316;
   text-decoration: none;
   font-weight: 600;
-  transition: color 0.3s ease;
 }
 
-.authLink:hover {
-  color: #ea580c;
-  text-decoration: underline;
-}
-
-.destinationsGrid {
+.grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 2rem;
@@ -96,19 +77,19 @@
     font-size: 3rem;
   }
 
-  .destinationsGrid {
+  .grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (min-width: 1024px) {
-  .destinationsGrid {
+  .grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (min-width: 1280px) {
-  .destinationsGrid {
+  .grid {
     grid-template-columns: repeat(4, 1fr);
   }
 }
