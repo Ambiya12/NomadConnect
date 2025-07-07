@@ -9,6 +9,7 @@ import authRouter from './routes/auth.js';
 import destinationRouter from './routes/destination.js';
 import geocodeRouter from './routes/geocode.js';
 import userRouter from './routes/user.js';
+import travelTipRouter from './routes/travelTips.js';
 
 const PORT = process.env.PORT || 8080;
 const app = express();
@@ -29,6 +30,7 @@ app.use('/api', authRouter);
 app.use('/api', userRouter);
 app.use('/api', destinationRouter);
 app.use('/api', geocodeRouter);
+app.use('/api', travelTipRouter);
 
 app.get('/images', (req, res) => {
   fs.readdir('public/images', (err, files) => {
