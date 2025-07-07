@@ -13,29 +13,33 @@ const highlights = [
   {
     id: 1,
     title: "Real Stories, Real People",
-    image: "/images/RealStories.png",
-    description: "No sponsored content, no tourist traps – just authentic experiences from fellow travelers.",
+    image: "/images/RealStories.webp",
+    description:
+      "No sponsored content, no tourist traps – just authentic experiences from fellow travelers.",
     icon: <People className={styles.featureIcon} />,
   },
   {
     id: 2,
     title: "Hidden Gems Everywhere",
-    image: "/images/Share.png",
-    description: "Discover secret beaches, local cafes, and off-the-beaten-path adventures.",
+    image: "/images/Share.webp",
+    description:
+      "Discover secret beaches, local cafes, and off-the-beaten-path adventures.",
     icon: <Explore className={styles.featureIcon} />,
   },
   {
     id: 3,
     title: "Travel Tips That Work",
-    image: "/images/TravelTips.png",
-    description: "Learn from mistakes, save money, and travel smarter with insider wisdom.",
+    image: "/images/TravelTips.webp",
+    description:
+      "Learn from mistakes, save money, and travel smarter with insider wisdom.",
     icon: <TipsAndUpdates className={styles.featureIcon} />,
   },
   {
     id: 4,
     title: "Share Your Adventures",
-    image: "/images/HiddenGems.png",
-    description: "Help fellow nomads discover amazing places and build lasting travel memories.",
+    image: "/images/HiddenGems.webp",
+    description:
+      "Help fellow nomads discover amazing places and build lasting travel memories.",
     icon: <PhotoCamera className={styles.featureIcon} />,
   },
 ];
@@ -44,9 +48,11 @@ const HomePage: React.FC = () => (
   <div>
     <section className={styles.hero}>
       <img
-        src="/images/worldTourLine.jpg"
+        src="/images/worldTourLines.webp"
         alt="World landmarks illustration"
         className={styles.heroImage}
+        loading="lazy"
+        sizes="(max-width: 600px) 100vw, 1400px"
       />
       <h1 className={styles.heroTitle}>
         Real stories. Real places. Real travelers.
@@ -57,7 +63,8 @@ const HomePage: React.FC = () => (
       <header className={styles.sectionHeader}>
         <h2 className={styles.sectionTitle}>Why Nomad Connect?</h2>
         <p className={styles.sectionSubtitle}>
-          We're building a community where authentic travel experiences matter more than Instagram likes.
+          We're building a community where authentic travel experiences matter
+          more than Instagram likes.
         </p>
       </header>
 
