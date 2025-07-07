@@ -33,8 +33,8 @@ const DestinationDetailPage: React.FC = () => {
         title="Destination not found"
         message={error}
         onRetry={() => (
-          <Link to="/destinations" className={styles.backButton}>
-            <ArrowBack className={styles.buttonIcon} />
+          <Link to="/destinations" className={styles.back}>
+            <ArrowBack className={styles.icon} />
             Back to Destinations
           </Link>
         )}
@@ -43,7 +43,7 @@ const DestinationDetailPage: React.FC = () => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.page}>
       <DestinationHeader
         destinationName={destination.name}
         destinationDescription={destination.description}
@@ -51,10 +51,9 @@ const DestinationDetailPage: React.FC = () => {
 
       <ImageGallery images={destination.images} name={destination.name} />
 
-      <div className={styles.content}>
-        <div className={styles.mainContent}>
+      <div className={styles.layout}>
+        <div className={styles.main}>
           <DestinationInfo destination={destination} />
-
           <DestinationActions
             isLiked={isLiked}
             likesCount={likesCount}
@@ -68,7 +67,6 @@ const DestinationDetailPage: React.FC = () => {
             author={destination.created_by}
             publishDate={destination.created_at}
           />
-
           <LocationCard
             city={destination.city}
             country={destination.country}
