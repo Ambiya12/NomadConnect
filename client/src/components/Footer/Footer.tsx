@@ -40,7 +40,6 @@ const Footer: React.FC = () => {
     <footer className={styles.footer}>
       <div className={styles.footerContainer}>
         <div className={styles.footerContent}>
-          {/* Logo and Brand */}
           <div className={styles.brandSection}>
             <Link to="/" className={styles.footerLogo}>
               <Explore className={styles.logoIcon} />
@@ -50,8 +49,6 @@ const Footer: React.FC = () => {
               Real stories. Real places. Real travelers.
             </p>
           </div>
-
-          {/* Social Media Links */}
           <div className={styles.socialSection}>
             <p className={styles.socialTitle}>Follow Our Journey</p>
             <div className={styles.socialLinks}>
@@ -71,8 +68,6 @@ const Footer: React.FC = () => {
             </div>
           </div>
         </div>
-
-        {/* Footer Bottom */}
         <div className={styles.footerBottom}>
           <p className={styles.copyright}>
             © {currentYear} Nomad Connect. Made with <Favorite className={styles.heartIcon} /> for travelers.

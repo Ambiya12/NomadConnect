@@ -251,7 +251,6 @@
   }
 }
 
-/* Desktop Styles (1024px+) */
 @media (min-width: 1024px) {
   .headerContainer {
     padding: 1rem 2rem;
