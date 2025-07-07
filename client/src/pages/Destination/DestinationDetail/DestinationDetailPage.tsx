@@ -82,6 +82,7 @@ const DestinationDetailPage: React.FC = () => {
         comments={destination.comments}
         commentUsers={commentUsers}
         onCommentSubmit={refetch}
+        type="destination"
       />
     </div>
   );
