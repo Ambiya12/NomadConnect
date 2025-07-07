@@ -91,7 +91,6 @@
     margin: 0;
   }
   
-  /* Mobile Responsive */
   @media (max-width: 767px) {
     .profileHeader {
       padding: 1rem;

@@ -42,7 +42,6 @@ const ProfileMenu: React.FC = () => {
     };
   }, [isOpen, isMobile]);
 
-  // Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (isMobile && isOpen) {
       document.body.style.overflow = 'hidden';
