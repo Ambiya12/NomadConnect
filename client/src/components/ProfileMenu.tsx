@@ -9,26 +9,59 @@ const ProfileMenu: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const menuRef = useRef<HTMLDivElement>(null);
-
-  const toggleDropdown = () => setIsOpen((prev) => !prev);
-
-  const handleClickOutside = (e: MouseEvent) => {
-    if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-      setIsOpen(false);
-    }
-  };
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    if (isOpen) document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isOpen]);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 767);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: Event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      if (isMobile) {
+        document.addEventListener('touchstart', handleClickOutside);
+      }
+    }
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [isOpen, isMobile]);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobile && isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobile, isOpen]);
 
   const handleSignOut = async () => {
     try {
       await logout();
-    } catch (err) {
-      console.error('Logout failed:', err);
-    } finally {
+      setIsOpen(false);
+      navigate('/');
+    } catch (error) {
+      console.error('Logout failed:', error);
       setIsOpen(false);
       navigate('/');
     }
@@ -39,34 +72,56 @@ const ProfileMenu: React.FC = () => {
     navigate('/profile');
   };
 
-  const getInitials = () =>
-    user ? `${user.first_name[0]}${user.last_name[0]}`.toUpperCase() : 'U';
+  const getInitials = () => {
+    if (!user) return 'U';
+    return `${user.first_name.charAt(0)}${user.last_name.charAt(0)}`.toUpperCase();
+  };
 
   if (!user) return null;
 
   return (
-    <div className={styles.profileMenu} ref={menuRef}>
-      <button onClick={toggleDropdown} className={styles.profileButton}>
-        <div className={styles.avatar}>{getInitials()}</div>
-        <span className={styles.userName}>{user.first_name}</span>
-        <ExpandMore
-          className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ''}`}
-        />
+    <div 
+      className={styles.profileMenu} 
+      ref={menuRef}
+    >
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className={styles.profileButton}
+      >
+        <div className={styles.avatar}>
+          {getInitials()}
+        </div>
+        <span className={styles.userName}>
+          {user.first_name}
+        </span>
+        <ExpandMore className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ''}`} />
       </button>
 
       {isOpen && (
+        <>
+          {isMobile && (
+            <div 
+              className={styles.mobileBackdrop}
+              onClick={() => setIsOpen(false)}
+            />
+          )}
+          
         <div className={styles.dropdown}>
           <div className={styles.userInfo}>
-            <div className={styles.avatarLarge}>{getInitials()}</div>
+            <div className={styles.avatarLarge}>
+              {getInitials()}
+            </div>
             <div className={styles.userDetails}>
               <p className={styles.fullName}>
                 {user.first_name} {user.last_name}
               </p>
-              <p className={styles.email}>{user.email}</p>
+              <p className={styles.email}>
+                {user.email}
+              </p>
             </div>
           </div>
 
-          <div className={styles.divider} />
+          <div className={styles.divider}></div>
 
           <div className={styles.menuItems}>
             <button className={styles.menuItem} onClick={handleProfileClick}>
@@ -74,9 +129,9 @@ const ProfileMenu: React.FC = () => {
               <span>Profile</span>
             </button>
 
-            <div className={styles.divider} />
+            <div className={styles.divider}></div>
 
-            <button
+            <button 
               className={`${styles.menuItem} ${styles.signOutItem}`}
               onClick={handleSignOut}
             >
@@ -85,6 +140,7 @@ const ProfileMenu: React.FC = () => {
             </button>
           </div>
         </div>
+        </>
       )}
     </div>
   );
