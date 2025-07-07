@@ -1,104 +1,116 @@
-import React from 'react';
-import { ArrowForward, Backpack, Public, Person } from '@mui/icons-material';
-import styles from './TravelTipsPage.module.css';
+import React, { useState } from "react";
+import { Add } from "@mui/icons-material";
+import { useAuth } from "../Login/hooks/AuthContext";
+import { useTravelTips } from "./hooks/useTravelTips";
+import TravelTipCard from "../../components/TravelTips/TravelTipCard";
+import CreateTipModal from "../../components/TravelTips/CreateTipModal";
+import EditTipModal from "../../components/TravelTips/EditTipModal";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
+import ErrorMessage from "../../components/ErrorMessage/ErrorMessage";
+import type { TravelTip } from "../../types/travelTip";
+import styles from "./TravelTipsPage.module.css";
 
 const TravelTipsPage: React.FC = () => {
-  const tipCategories = [
-    {
-      id: 1,
-      title: 'General Tips',
-      icon: <Public fontSize="large" />,
-      categoryClass: styles.pinkCategory,
-      iconClass: styles.pinkIcon,
-      articles: [
-        {
-          title: 'Packing Hacks for Backpackers',
-          description: 'Essential tips to maximize space and minimize weight',
-          readTime: '5 min read'
-        }
-      ]
-    },
-    {
-      id: 2,
-      title: 'Cultural Tips',
-      icon: <Person fontSize="large" />,
-      categoryClass: styles.purpleCategory,
-      iconClass: styles.purpleIcon,
-      articles: [
-        {
-          title: 'How to Stay Safe as a Solo Female Traveler',
-          description: 'Practical advice for confident solo adventures',
-          readTime: '8 min read'
-        }
-      ]
-    },
-    {
-      id: 3,
-      title: 'Solo Travel Tips',
-      icon: <Backpack fontSize="large" />,
-      categoryClass: styles.redCategory,
-      iconClass: styles.redIcon,
-      articles: [
-        {
-          title: '10 Ways to save money on the Road',
-          description: 'Budget travel strategies that actually work',
-          readTime: '6 min read'
-        }
-      ]
-    }
-  ];
+  const { isAuthenticated } = useAuth();
+  const { travelTips, loading, error, refetch } = useTravelTips();
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingTip, setEditingTip] = useState<TravelTip | null>(null);
+
+  const handleCreateSuccess = () => {
+    refetch();
+  };
+
+  const handleEditSuccess = () => {
+    refetch();
+    setEditingTip(null);
+  };
+
+  const handleEdit = (tip: TravelTip) => {
+    setEditingTip(tip);
+    setIsEditModalOpen(true);
+  };
+
+  const handleDelete = () => {
+    refetch();
+  };
+
+  if (loading) {
+    return <LoadingSpinner message="Loading travel tips..." />;
+  }
+
+  if (error) {
+    return (
+      <ErrorMessage
+        title="Error loading travel tips"
+        message={error}
+        onRetry={refetch}
+      />
+    );
+  }
 
   return (
     <div className={styles.container}>
       <section className={styles.headerSection}>
         <div className={styles.headerContainer}>
-          <h1 className={styles.title}>
-            Real advice from real explorers -<br />
-            travel smart, stay local :)
-          </h1>
+          <h1 className={styles.title}>Real advice from real explorers</h1>
+          <p className={styles.subtitle}>
+            Travel smart, stay local, and discover insider tips from fellow
+            nomads
+          </p>
+
+          {isAuthenticated && (
+            <button
+              onClick={() => setIsCreateModalOpen(true)}
+              className={styles.addTipButton}
+            >
+              <Add className={styles.buttonIcon} />
+              Share Your Wisdom
+            </button>
+          )}
         </div>
       </section>
 
-  
+      <section className={styles.tipsSection}>
         <div className={styles.tipsContainer}>
-          <div className={styles.tipsGrid}>
-            {tipCategories.map((category) => (
-              <div key={category.id} className={`${styles.tipCategory} ${category.categoryClass}`}>
-                <div className={`${styles.categoryIcon} ${category.iconClass}`}>
-                  {category.icon}
-                </div>
-                <h2 className={styles.categoryTitle}>
-                  {category.title}
-                </h2>
-                
-                {category.articles.map((article, index) => (
-                  <div key={index} className={styles.articleCard}>
-                    <h3 className={styles.articleTitle}>
-                      {article.title}
-                    </h3>
-                    <p className={styles.articleDescription}>
-                      {article.description}
-                    </p>
-                    <div className={styles.articleMeta}>
-                      <span className={styles.readTime}>{article.readTime}</span>
-                      <button className={styles.readMoreButton}>
-                        Read More
-                        <ArrowForward className={styles.buttonIcon} />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
+          {travelTips.length === 0 ? (
+            <div className={styles.emptyState}>
+              <h3>No travel tips yet</h3>
+              <p>
+                Be the first to share your travel wisdom with the community!
+              </p>
+              {isAuthenticated && (
+                <button
+                  onClick={() => setIsCreateModalOpen(true)}
+                  className={styles.addFirstTipButton}
+                >
+                  <Add className={styles.buttonIcon} />
+                  Share First Tip
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className={styles.tipsGrid}>
+              {travelTips.map((tip) => (
+                <TravelTipCard
+                  key={tip._id}
+                  tip={tip}
+                  onLikeUpdate={refetch}
+                  onDelete={handleDelete}
+                  onEdit={handleEdit}
+                />
+              ))}
+            </div>
+          )}
         </div>
+      </section>
 
+      <section className={styles.newsletterSection}>
         <div className={styles.newsletterContainer}>
-          <h2 className={styles.newsletterTitle}>
-            Get Weekly Travel Tips
-          </h2>
+          <h2 className={styles.newsletterTitle}>Get Weekly Travel Tips</h2>
           <p className={styles.newsletterDescription}>
-            Join thousands of travelers getting insider tips delivered to their inbox every week.
+            Join thousands of travelers getting insider tips delivered to their
+            inbox every week.
           </p>
           <div className={styles.newsletterForm}>
             <input
@@ -106,11 +118,26 @@ const TravelTipsPage: React.FC = () => {
               placeholder="Enter your email"
               className={styles.newsletterInput}
             />
-            <button className={styles.subscribeButton}>
-              Subscribe
-            </button>
+            <button className={styles.subscribeButton}>Subscribe</button>
           </div>
         </div>
+      </section>
+
+      <CreateTipModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSuccess={handleCreateSuccess}
+      />
+
+      <EditTipModal
+        isOpen={isEditModalOpen}
+        tip={editingTip}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setEditingTip(null);
+        }}
+        onSuccess={handleEditSuccess}
+      />
     </div>
   );
 };
