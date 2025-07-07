@@ -14,134 +14,97 @@ import styles from './TravelTipsPage.module.css';
 const TravelTipsPage: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const { travelTips, loading, error, refetch } = useTravelTips();
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editingTip, setEditingTip] = useState<TravelTip | null>(null);
 
-  const handleCreateSuccess = () => {
-    refetch();
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedTip, setSelectedTip] = useState<TravelTip | null>(null);
+
+  if (loading) return <LoadingSpinner message="Loading travel tips..." />;
+  if (error) return <ErrorMessage title="Error" message={error} onRetry={refetch} />;
+
+  const openEditModal = (tip: TravelTip) => {
+    setSelectedTip(tip);
+    setShowEditModal(true);
   };
-
-  const handleEditSuccess = () => {
-    refetch();
-    setEditingTip(null);
-  };
-
-  const handleEdit = (tip: TravelTip) => {
-    setEditingTip(tip);
-    setIsEditModalOpen(true);
-  };
-
-  const handleDelete = () => {
-    refetch();
-  };
-
-  if (loading) {
-    return <LoadingSpinner message="Loading travel tips..." />;
-  }
-
-  if (error) {
-    return (
-      <ErrorMessage
-        title="Error loading travel tips"
-        message={error}
-        onRetry={refetch}
-      />
-    );
-  }
 
   return (
     <div className={styles.container}>
-
       <section className={styles.headerSection}>
         <div className={styles.headerContainer}>
-          <h1 className={styles.title}>
-            Real advice from real explorers
-          </h1>
+          <h1 className={styles.title}>Real advice from real explorers</h1>
           <p className={styles.subtitle}>
-            Travel smart, stay local, and discover insider tips from fellow nomads
+            Travel smart, stay local, and discover insider tips from fellow nomads.
           </p>
-          
-        </div>
-      </section>
 
-      <section className={styles.tipsSection}>
-        <div className={styles.tipsContainer}>
-          {travelTips.length === 0 ? (
-            <div className={styles.emptyState}>
-              <h3>No travel tips yet</h3>
-              <p>Be the first to share your travel wisdom with the community!</p>
-              {isAuthenticated && (
-                <button
-                  onClick={() => setIsCreateModalOpen(true)}
-                  className={styles.addFirstTipButton}
-                >
-                  <Add className={styles.buttonIcon} />
-                  Share First Tip
-                </button>
-              )}
-            </div>
-          ) : (
-            <>
-              {!isAuthenticated && (
-                <div className={styles.authNotice}>
-                  <p>
-                    <Link to="/login" className={styles.authLink}>Login</Link> or{' '}
-                    <Link to="/signup" className={styles.authLink}>sign up</Link> to view detailed travel tips, like posts, and share your own travel wisdom with the community.
-                  </p>
-                </div>
-              )}
-            <div className={styles.tipsGrid}>
-              {travelTips.map((tip) => (
-                <TravelTipCard
-                  key={tip._id}
-                  tip={tip}
-                  onLikeUpdate={refetch}
-                  onDelete={handleDelete}
-                  onEdit={handleEdit}
-                />
-              ))}
-            </div>
-            </>
+          {isAuthenticated && (
+            <button
+              className={styles.addTipButton}
+              onClick={() => setShowCreateModal(true)}
+            >
+              <Add fontSize="small" /> Share Tip
+            </button>
           )}
         </div>
       </section>
 
-      <section className={styles.newsletterSection}>
-        <div className={styles.newsletterContainer}>
-          <h2 className={styles.newsletterTitle}>
-            Get Weekly Travel Tips
-          </h2>
-          <p className={styles.newsletterDescription}>
-            Join thousands of travelers getting insider tips delivered to their inbox every week.
-          </p>
-          <div className={styles.newsletterForm}>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className={styles.newsletterInput}
-            />
-            <button className={styles.subscribeButton}>
-              Subscribe
-            </button>
+      <main className={styles.mainContent}>
+        {travelTips.length === 0 ? (
+          <div className={styles.emptyState}>
+            <h2>No tips available</h2>
+            <p>Be the first to share something helpful.</p>
           </div>
-        </div>
+        ) : (
+          <>
+            {!isAuthenticated && (
+              <div className={styles.authNotice}>
+                <p>
+                  <Link to="/login">Login</Link> or{' '}
+                  <Link to="/signup">Sign up</Link> to like and share tips.
+                </p>
+              </div>
+            )}
+
+            <div className={styles.grid}>
+              {travelTips.map((tip) => (
+                <TravelTipCard
+                  key={tip._id}
+                  tip={tip}
+                  onEdit={() => openEditModal(tip)}
+                  onDelete={refetch}
+                  onLikeUpdate={refetch}
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </main>
+
+      <section className={styles.newsletter}>
+        <h2>Subscribe for Weekly Tips</h2>
+        <p>Join thousands of travelers getting curated advice each week.</p>
+        <form className={styles.newsletterForm}>
+          <input type="email" placeholder="Your email" required />
+          <button type="submit">Subscribe</button>
+        </form>
       </section>
 
       <CreateTipModal
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-        onSuccess={handleCreateSuccess}
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onSuccess={refetch}
       />
 
       <EditTipModal
-        isOpen={isEditModalOpen}
-        tip={editingTip}
+        isOpen={showEditModal}
+        tip={selectedTip}
         onClose={() => {
-          setIsEditModalOpen(false);
-          setEditingTip(null);
+          setShowEditModal(false);
+          setSelectedTip(null);
         }}
-        onSuccess={handleEditSuccess}
+        onSuccess={() => {
+          refetch();
+          setSelectedTip(null);
+        }}
       />
     </div>
   );
